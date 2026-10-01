@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapouu — Amchit</title>
+<meta name="description" content="Chapouu, on the Boulevard in Amchit. Charcoal-grilled plates, cold pours and a sweet finish — it's more than just a sea view.">
+<meta name="theme-color" content="#3E7571">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Chapouu — Amchit">
+<meta property="og:description" content="It's more than just a sea view. Boulevard Amchit, Lebanon.">
+<meta property="og:image" content="/assets/favicon-512.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="/assets/chapouu-mark.svg" type="image/svg+xml">
+<link rel="alternate icon" href="/assets/favicon-32.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="image" href="/assets/chapouu-logo.svg">
+<link rel="prefetch" as="image" href="/assets/chapouu-logo-light.svg">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..800&family=Outfit:wght@300;400;500;600&family=Sacramento&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.css">
+
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js" } }
+</script>
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<div class="loader" role="status" aria-label="Loading">
+  <div class="loader-inner">
+    <img class="loader-mark" src="/assets/chapouu-mark.svg" alt="" width="120" height="120">
+    <div class="loader-bar"><span></span></div>
+  </div>
+</div>
+
+<div class="backdrop" aria-hidden="true"></div>
+<div id="scene" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="site-header">
+  <nav class="nav" aria-label="Primary">
+    <a class="brand" href="#top" aria-label="Chapouu, home">
+      <span class="brand-logo">
+        <img src="/assets/chapouu-logo.svg" alt="Chapouu" width="360" height="212">
+        <img src="/assets/chapouu-logo-light.svg" alt="" aria-hidden="true" width="360" height="212">
+      </span>
+    </a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Open navigation">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#build">The build</a></li>
+      <li><a href="#menu">Signatures</a></li>
+      <li><a href="#story">Our story</a></li>
+      <li><a href="#visit">Find us</a></li>
+      <li><a class="nav-cta" href="https://www.instagram.com/chapouu_beachtreats/" target="_blank" rel="noreferrer noopener">Instagram ↗</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main">
+
+  <!-- ===================================================== Hero -->
+  <section class="hero" id="top">
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <img class="hero-logo" src="/assets/chapouu-logo.svg" alt="Chapouu" width="900" height="530" fetchpriority="high">
+        <h1>
+          <span>It's more than</span>
+          <span class="script">just a sea view.</span>
+        </h1>
+        <p class="hero-intro">On the Boulevard in Amchit. Charcoal off the grill, something cold in the glass, and the kind of afternoon that keeps going until the sun drops behind the water.</p>
+        <div class="hero-actions">
+          <a class="button" href="#build"><span>Build the burger</span></a>
+          <a class="button ghost" href="#visit"><span>Find us</span></a>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-cue" aria-hidden="true"><i></i> Scroll</div>
+  </section>
+
+  <!-- ===================================================== Build -->
+  <section class="build" id="build" data-dark="progress">
+    <div class="build-sticky">
+      <div class="build-grid">
+        <div class="build-copy">
+          <p class="kicker">Built to order</p>
+          <h2 class="title">Seven layers,<br>one very good <em>burger.</em></h2>
+
+          <ol class="layer-list">
+            <li><b>01</b><div><strong>Bottom bun</strong><span>Brioche, split and toasted face-down on the flat top.</span></div></li>
+            <li><b>02</b><div><strong>The patty</strong><span>Smashed thin, charred at the edges, still running juicy.</span></div></li>
+            <li><b>03</b><div><strong>Cheese</strong><span>Laid on hot so it slumps into every ridge.</span></div></li>
+            <li><b>04</b><div><strong>Onion</strong><span>Cut into rings the moment the order lands.</span></div></li>
+            <li><b>05</b><div><strong>Tomato</strong><span>Thick slices, salted, straight out of the crate.</span></div></li>
+            <li><b>06</b><div><strong>Lettuce</strong><span>Ice-bathed until it snaps. Non-negotiable.</span></div></li>
+            <li><b>07</b><div><strong>Sesame crown</strong><span>One press. Wrapped. Out to the terrace.</span></div></li>
+          </ol>
+
+          <div class="build-meter"><span>Assembled</span> <i></i> <em>0%</em></div>
+        </div>
+        <div class="build-stage" aria-hidden="true"></div>
+      </div>
+
+      <div class="build-tools">
+        <div class="hat-picker">
+          <p class="hat-picker-note"><em>Chapouu</em> means hat. Give it one.</p>
+          <div class="hat-buttons" role="radiogroup" aria-label="Choose the burger's hat">
+            <button class="hat-btn is-on" type="button" data-hat="0" role="radio" aria-checked="true">
+              <svg viewBox="0 0 32 24" aria-hidden="true" fill="none">
+                <path d="M2 17c4-2 9-3 14-3s11 1 14 3c-3 3-8 4.5-14 4.5S5 20 2 17z" fill="currentColor"/>
+                <path d="M10 16c0-5 2.6-9 6-9s6 4 6 9z" fill="currentColor"/>
+                <path d="M23 8c0-3 2-3 2-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+              </svg>
+              <span>Sombrero</span>
+            </button>
+            <button class="hat-btn" type="button" data-hat="1" role="radio" aria-checked="false">
+              <svg viewBox="0 0 32 24" aria-hidden="true" fill="none">
+                <path d="M1 16c3-3 9-4.5 15-4.5S28 13 31 16c-3 3.4-9 5-15 5S4 19.4 1 16z" fill="currentColor"/>
+                <path d="M10 14c0-4.4 2.7-8 6-8s6 3.6 6 8z" fill="currentColor"/>
+                <path d="M9.6 13.4h12.8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" opacity=".45"/>
+              </svg>
+              <span>Straw</span>
+            </button>
+            <button class="hat-btn" type="button" data-hat="2" role="radio" aria-checked="false">
+              <svg viewBox="0 0 32 24" aria-hidden="true" fill="none">
+                <path d="M6 16c0-6 4.5-10 10-10s10 4 10 10z" fill="currentColor"/>
+                <path d="M26 15.5c3 0 5 .7 5 2s-2.4 2-5.5 2H6v-4z" fill="currentColor"/>
+              </svg>
+              <span>Cap</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="build-payoff" aria-hidden="true">
+          <span class="script">And that's a Chapouu.</span>
+          <small>Keep scrolling</small>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== Ticker -->
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <div class="ticker-line">Off the grill <i>✺</i> Cold pours <i>✺</i> Sunset hours <i>✺</i> Boulevard Amchit <i>✺</i> Salt in the air <i>✺</i></div>
+      <div class="ticker-line">Off the grill <i>✺</i> Cold pours <i>✺</i> Sunset hours <i>✺</i> Boulevard Amchit <i>✺</i> Salt in the air <i>✺</i></div>
+    </div>
+  </div>
+
+  <!-- ===================================================== Menu -->
+  <section class="section menu-section" id="menu">
+    <div class="shell">
+      <div class="menu-head">
+        <div>
+          <p class="kicker reveal">The ones with our name on them</p>
+          <h2 class="title reveal">If it says Chapouu, we made it our way.</h2>
+        </div>
+        <p class="reveal">The rest of the menu is long — pizza, sandwiches, salads, pasta, crepes, the lot. These four are the ones people come back for.</p>
+      </div>
+
+      <div class="menu-grid">
+        <article class="menu-card is-hero reveal">
+          <span class="card-no">Signature</span>
+          <div class="card-art" aria-hidden="true">
+            <svg viewBox="0 0 120 120" fill="none">
+              <ellipse cx="60" cy="104" rx="40" ry="6" fill="rgba(0,0,0,.16)"/>
+              <path d="M20 50c0-18 18-30 40-30s40 12 40 30z" fill="#FFFBF3"/>
+              <circle cx="45" cy="34" r="2.8" fill="#CA7247"/><circle cx="61" cy="28" r="2.8" fill="#CA7247"/><circle cx="77" cy="36" r="2.8" fill="#CA7247"/>
+              <path d="M16 54h88a6 6 0 0 1 0 12H16a6 6 0 0 1 0-12z" fill="#6E9D6E"/>
+              <path d="M20 68h80v10H20z" fill="#5F3227"/>
+              <path d="M20 78h80v9H20z" fill="#E9A03C"/>
+              <path d="M20 87h80c0 11-10 18-24 18H44c-14 0-24-7-24-18z" fill="#FFFBF3"/>
+            </svg>
+          </div>
+          <h3>Chapouu Burger</h3>
+          <p>Double beef, cheddar patty, bacon, cheddar and the special sauce. The one the whole site is about.</p>
+        </article>
+
+        <article class="menu-card reveal">
+          <span class="card-no">Signature</span>
+          <div class="card-art" aria-hidden="true">
+            <svg viewBox="0 0 120 120" fill="none">
+              <ellipse cx="60" cy="100" rx="46" ry="6" fill="rgba(0,0,0,.16)"/>
+              <path d="M8 62c0-17 23-29 52-29s52 12 52 29z" fill="#FFFBF3"/>
+              <path d="M30 44l6 10M52 40l5 10M76 44l5 10" stroke="#E9A03C" stroke-width="5" stroke-linecap="round"/>
+              <path d="M8 62c9 4 20 6 26 3s16 5 26 3 18 5 26 2 14 1 20-2v7H8z" fill="#6E9D6E"/>
+              <path d="M9 73h102v9H9z" fill="#5F3227"/>
+              <path d="M9 82h102v5H9z" fill="#E9A03C"/>
+              <path d="M8 87h104c0 10-9 17-22 17H30c-13 0-22-7-22-17z" fill="#FFFBF3"/>
+            </svg>
+          </div>
+          <h3>Chapou Sub</h3>
+          <p>Beef, chips, bacon, caramelised onion and cheddar, all under the same special sauce.</p>
+        </article>
+
+        <article class="menu-card reveal">
+          <span class="card-no">Signature</span>
+          <div class="card-art" aria-hidden="true">
+            <svg viewBox="0 0 120 120" fill="none">
+              <ellipse cx="60" cy="100" rx="44" ry="7" fill="rgba(0,0,0,.16)"/>
+              <path d="M12 74h96c0 12-10 22-24 22H36c-14 0-24-10-24-22z" fill="#FFFBF3"/>
+              <path d="M28 74c0-12 8-20 18-20s18 8 18 20z" fill="#E9A03C"/>
+              <path d="M60 74c0-14 7-24 16-24s16 10 16 24z" fill="#CA7247"/>
+              <rect x="20" y="44" width="9" height="30" rx="4.5" fill="#6E9D6E"/>
+              <rect x="34" y="36" width="9" height="38" rx="4.5" fill="#E44621"/>
+              <circle cx="84" cy="42" r="8" fill="#FFFBF3"/>
+            </svg>
+          </div>
+          <h3>Chapouu Combo</h3>
+          <p>Cordon bleu, crispy chicken, tenders, garlic bread, wedges, nachos, mozzarella sticks. Built for the table, not the person.</p>
+        </article>
+
+        <article class="menu-card reveal">
+          <span class="card-no">Signature</span>
+          <div class="card-art" aria-hidden="true">
+            <svg viewBox="0 0 120 120" fill="none">
+              <ellipse cx="60" cy="104" rx="26" ry="6" fill="rgba(0,0,0,.16)"/>
+              <path d="M46 40h28l-10 62a4 4 0 0 1-8 0z" fill="#FFFBF3"/>
+              <path d="M60 16 96 46c-8 6-22 9-36 9s-28-3-36-9z" fill="#E9A03C"/>
+              <path d="M60 16 96 46c-6 4-15 7-26 8L60 16z" fill="#CA7247"/>
+              <path d="M40 40c6 5 14 7 20 7" stroke="#5F3227" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="70" cy="34" r="5" fill="#E44621"/>
+            </svg>
+          </div>
+          <h3>Chapouu Crepe</h3>
+          <p>The house crepe, folded hot. Add strawberry, banana, lotus or a scoop on the side.</p>
+        </article>
+      </div>
+
+      <div class="menu-cta reveal">
+        <p>Prices and the full list live on the menu — it changes through the season.</p>
+        <a class="button" href="https://me-page.org/data/front/constructor/button-file/new-Menu-6a00fef81ec071.89401908.pdf" target="_blank" rel="noreferrer noopener"><span>View the full menu ↗</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== Story -->
+  <section class="section story-section" id="story" data-dark>
+    <div class="story-grid">
+      <div class="story-art reveal" aria-hidden="true">
+        <div class="sun"><img src="/assets/chapouu-mark.svg" alt="" width="200" height="200"></div>
+      </div>
+      <div class="story-copy">
+        <p class="kicker reveal">Since day one</p>
+        <p class="story-quote reveal">It's more than <em>just a sea view.</em></p>
+        <p class="reveal">Chapouu started as a small stand on the Boulevard with a grill, a fridge full of fruit and a view that did most of the selling. The view is still there. So is the grill. What we added is everything worth staying for — long tables, no rush, and food that tastes like someone actually cared how it was put together.</p>
+        <div class="story-notes reveal">
+          <div>Made to order</div>
+          <div>Open till sunset</div>
+          <div>Amchit, Lebanon</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== Visit -->
+  <section class="section visit-section" id="visit">
+    <div class="visit-card reveal">
+      <div>
+        <p class="kicker">Come by</p>
+        <h2 class="title">We're on the Boulevard.</h2>
+        <p>Walk-ins all day. For a table, a big group, or anything you'd rather ask first — call us, or send a message on Instagram and we'll answer.</p>
+        <div class="hero-actions">
+          <a class="button" href="tel:+96181404258"><span>Call +961 81 40 42 58</span></a>
+          <a class="button ghost" href="https://www.instagram.com/chapouu_beachtreats/" target="_blank" rel="noreferrer noopener"><span>Instagram ↗</span></a>
+        </div>
+      </div>
+      <dl class="info-list">
+        <div class="info-row">
+          <dt>Where</dt>
+          <dd><a href="https://maps.google.com/?q=Boulevard+Amchit+Lebanon" target="_blank" rel="noreferrer noopener">Boulevard Amchit, Lebanon</a></dd>
+        </div>
+        <div class="info-row">
+          <dt>Phone</dt>
+          <dd><a href="tel:+96181404258">+961 81 40 42 58</a></dd>
+        </div>
+        <div class="info-row">
+          <dt>Hours</dt>
+          <dd>Daily, late morning until the sun goes down</dd>
+        </div>
+        <div class="info-row">
+          <dt>Menu</dt>
+          <dd><a href="https://me-page.org/data/front/constructor/button-file/new-Menu-6a00fef81ec071.89401908.pdf" target="_blank" rel="noreferrer noopener">See the full menu ↗</a></dd>
+        </div>
+        <div class="info-row">
+          <dt>Instagram</dt>
+          <dd><a href="https://www.instagram.com/chapouu_beachtreats/" target="_blank" rel="noreferrer noopener">Follow along ↗</a></dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <img class="footer-logo" src="/assets/chapouu-logo-light.svg" alt="Chapouu" width="360" height="212">
+    <p class="footer-note">Boulevard Amchit · © <span id="year">2026</span> Chapouu</p>
+    <p class="footer-links">
+      <a class="footer-link" href="https://me-page.org/data/front/constructor/button-file/new-Menu-6a00fef81ec071.89401908.pdf" target="_blank" rel="noreferrer noopener">Menu ↗</a>
+      <a class="footer-link" href="https://www.instagram.com/chapouu_beachtreats/" target="_blank" rel="noreferrer noopener">Instagram ↗</a>
+    </p>
+  </div>
+</footer>
+
+<script src="/assets/site.js" defer></script>
+<script type="module" src="/assets/scene.js"></script>
+</body>
+</html>
