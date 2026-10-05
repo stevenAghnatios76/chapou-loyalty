@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Chapouu — Amchit</title>
 <meta name="description" content="Chapouu, on the Boulevard in Amchit. Charcoal-grilled plates, cold pours and a sweet finish — it's more than just a sea view.">
 <meta name="theme-color" content="#3E7571">
@@ -25,8 +25,10 @@
 <link rel="stylesheet" href="/assets/site.css">
 
 <script type="importmap">
-{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js" } }
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.min.js" } }
 </script>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.min.js">
 </head>
 
 <body>
@@ -57,6 +59,8 @@
     <ul class="nav-links" id="nav-links">
       <li><a href="#build">The build</a></li>
       <li><a href="#menu">Signatures</a></li>
+      <li><a href="#hats">Hat map</a></li>
+      <li><a href="#place">The place</a></li>
       <li><a href="#story">Our story</a></li>
       <li><a href="#visit">Find us</a></li>
       <li><a class="nav-cta" href="https://www.instagram.com/chapouu_beachtreats/" target="_blank" rel="noreferrer noopener">Instagram ↗</a></li>
@@ -91,7 +95,7 @@
       <div class="build-grid">
         <div class="build-copy">
           <p class="kicker">Built to order</p>
-          <h2 class="title">Seven layers,<br>one very good <em>burger.</em></h2>
+          <h2 class="title">Seven layers,<br> one very good <em>burger.</em></h2>
 
           <ol class="layer-list">
             <li><b>01</b><div><strong>Bottom bun</strong><span>Brioche, split and toasted face-down on the flat top.</span></div></li>
@@ -241,6 +245,115 @@
     </div>
   </section>
 
+  <!-- ===================================================== Hat map -->
+  <section class="section world-section" id="hats" data-dark>
+    <div class="world-grid">
+      <div class="world-copy">
+        <p class="kicker reveal">Chapouu means hat</p>
+        <h2 class="title reveal">Our hat marks Lebanon. Our flavors mark <em>your memory.</em></h2>
+        <p class="world-intro reveal">Every corner of the world has a hat it is known by. Ours sits on the Boulevard in Amchit. Spin the globe and meet the rest.</p>
+
+        <div class="hat-card is-home reveal" aria-live="polite">
+          <span class="hat-card-count"><b>01</b> / <i>29</i></span>
+          <strong class="hat-card-name">Chapouu</strong>
+          <span class="hat-card-place">Lebanon</span>
+        </div>
+
+        <div class="world-controls reveal">
+          <button class="round-btn" type="button" data-world="prev" aria-label="Previous hat">←</button>
+          <button class="round-btn" type="button" data-world="next" aria-label="Next hat">→</button>
+          <button class="button ghost" type="button" data-world="home"><span>Back to Lebanon</span></button>
+        </div>
+      </div>
+
+      <div class="world-stage" aria-hidden="true">
+        <p class="world-hint">Drag to spin · tap a hat</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== The place -->
+  <section class="section perks-section" id="place">
+    <div class="shell">
+      <div class="menu-head">
+        <div>
+          <p class="kicker reveal">More than the view</p>
+          <h2 class="title reveal">Come for the sea. Stay for <em>everything else.</em></h2>
+        </div>
+        <p class="reveal">A table by the water is only where it starts. Here is what fills the rest of the afternoon.</p>
+      </div>
+
+      <div class="perks-grid">
+        <article class="perk perk-sunset reveal">
+          <svg class="perk-art" viewBox="0 0 400 150" fill="none" aria-hidden="true" preserveAspectRatio="xMidYMax slice">
+            <circle cx="200" cy="150" r="150" fill="#FFFBF3" opacity=".08"/>
+            <circle cx="200" cy="150" r="108" fill="#FFFBF3" opacity=".1"/>
+            <circle cx="200" cy="150" r="68" fill="#FDF3E3"/>
+          </svg>
+          <span class="card-no">Every evening</span>
+          <h3>The best sunset ever.</h3>
+          <p>The sun goes down straight into the water, right in front of your table.</p>
+        </article>
+
+        <article class="perk reveal">
+          <svg class="perk-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="24" cy="24" r="17"/><path d="M7 24h34M24 7v34M12 12c5 5 5 19 0 24M36 12c-5 5-5 19 0 24"/>
+          </svg>
+          <h3>Book your game</h3>
+          <p>Football or basketball. Call ahead and the slot is yours.</p>
+        </article>
+
+        <article class="perk reveal">
+          <svg class="perk-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="8" y="8" width="32" height="32" rx="7"/><circle cx="17" cy="17" r="1.6" fill="currentColor"/><circle cx="31" cy="17" r="1.6" fill="currentColor"/><circle cx="24" cy="24" r="1.6" fill="currentColor"/><circle cx="17" cy="31" r="1.6" fill="currentColor"/><circle cx="31" cy="31" r="1.6" fill="currentColor"/>
+          </svg>
+          <h3>Board games</h3>
+          <p>Pick a box, clear the table, lose track of the time.</p>
+        </article>
+
+        <article class="perk reveal">
+          <svg class="perk-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M19 9h10M24 9v8M19 17h10l2 6H17zM20 23c-4 4-5 9-3 13h14c2-4 1-9-3-13M15 40h18M31 28c6 0 9 3 9 8M21 5c-1-1 1-2 0-3M27 5c-1-1 1-2 0-3"/>
+          </svg>
+          <h3>Shisha by the sea</h3>
+          <p>A special shisha, with the whole view in front of it.</p>
+        </article>
+
+        <article class="perk reveal">
+          <svg class="perk-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="24" cy="24" r="17"/><path d="M17 21v1M31 21v1M15 28c2.5 4 5.5 6 9 6s6.5-2 9-6"/>
+          </svg>
+          <h3>Friendly staff</h3>
+          <p>Looked after from the first hello to the last plate.</p>
+        </article>
+
+        <article class="perk perk-kitchen reveal">
+          <svg class="perk-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="24" cy="24" r="17"/><path d="M7 24h34M24 7c-6 5-6 29 0 34M24 7c6 5 6 29 0 34"/>
+          </svg>
+          <h3>An international kitchen, and a unique one</h3>
+          <p>Burgers, pizza, pasta, subs, crepes. One kitchen that travels as far as the hats do.</p>
+        </article>
+
+        <article class="perk reveal">
+          <svg class="perk-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M15 6v13a5 5 0 0 0 10 0V6M20 6v36M33 42V6c-5 3-7 9-7 16h7"/>
+          </svg>
+          <h3>Tasty food</h3>
+          <p>Made to order and out to the terrace while it is hot.</p>
+        </article>
+
+        <article class="perk reveal">
+          <svg class="perk-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 20c5-5 9-5 14 0s9 5 14 0 7-4 10-2M5 31c5-5 9-5 14 0s9 5 14 0 7-4 10-2"/>
+          </svg>
+          <h3>Good atmosphere</h3>
+          <p>Long tables, salt in the air, and nobody rushing you.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
   <!-- ===================================================== Story -->
   <section class="section story-section" id="story" data-dark>
     <div class="story-grid">
@@ -312,5 +425,6 @@
 
 <script src="/assets/site.js" defer></script>
 <script type="module" src="/assets/scene.js"></script>
+<script type="module" src="/assets/world.js"></script>
 </body>
 </html>

@@ -28,6 +28,12 @@
 
 html { scroll-behavior: smooth; }
 
+/* Big monitors: set everything a touch smaller so the page reads at a
+   comfortable size instead of stretching with the screen. */
+@media (min-width: 1280px) {
+  html { font-size: 93.75%; }
+}
+
 body {
   margin: 0;
   color: var(--ink);
@@ -135,7 +141,8 @@ button { font: inherit; color: inherit; }
   background:
     radial-gradient(105% 70% at 50% 118%, rgba(228, 70, 33, .5) 0%, transparent 62%),
     linear-gradient(170deg, var(--teal) 0%, var(--teal-deep) 55%, var(--teal-ink) 100%);
-  transition: opacity .35s linear;
+  /* no transition: --dive is already eased in script, and a transition on top
+     of a value that changes every frame only makes it trail behind */
 }
 
 #scene {
@@ -187,7 +194,7 @@ button { font: inherit; color: inherit; }
 .site-header.on-dark .nav-cta { border-color: currentColor; }
 
 .nav {
-  max-width: 1500px;
+  max-width: 1320px;
   margin-inline: auto;
   display: flex;
   align-items: center;
@@ -272,7 +279,7 @@ body.nav-open .brand-logo img + img { opacity: 1; }
    ========================================================================== */
 main { position: relative; z-index: 2; }
 
-.shell { max-width: 1500px; margin-inline: auto; }
+.shell { max-width: 1320px; margin-inline: auto; }
 
 .kicker {
   display: flex;
@@ -359,7 +366,7 @@ main { position: relative; z-index: 2; }
   align-content: center;
   padding: clamp(7rem, 15vh, 9rem) var(--edge) clamp(3.5rem, 9vh, 6rem);
 }
-.hero-inner { max-width: 1500px; margin-inline: auto; width: 100%; }
+.hero-inner { max-width: 1320px; margin-inline: auto; width: 100%; }
 .hero-copy { max-width: 40rem; }
 .hero-logo {
   width: clamp(10rem, 21vw, 17.5rem);
@@ -442,7 +449,7 @@ main { position: relative; z-index: 2; }
   color: color-mix(in srgb, var(--cream) calc(var(--mix, 0) * 100%), var(--ink));
 }
 .build-grid {
-  max-width: 1500px;
+  max-width: 1320px;
   margin-inline: auto;
   width: 100%;
   display: grid;
@@ -474,7 +481,6 @@ main { position: relative; z-index: 2; }
   border-bottom-color: color-mix(in srgb, currentColor 26%, transparent);
   opacity: calc(.3 + .7 * var(--on));
   transform: translateX(calc(var(--on) * .45rem));
-  transition: opacity .4s ease, transform .45s cubic-bezier(.2, .8, .2, 1);
 }
 .layer-list li::before {
   content: "";
@@ -486,7 +492,6 @@ main { position: relative; z-index: 2; }
   border-radius: 50%;
   background: var(--flame);
   transform: translateY(-50%) scale(var(--on));
-  transition: transform .4s cubic-bezier(.3, 1.5, .5, 1);
 }
 .layer-list b {
   font-size: .68rem;
@@ -641,6 +646,115 @@ main { position: relative; z-index: 2; }
 @keyframes roll { to { transform: translateX(-50%); } }
 
 /* ==========================================================================
+   Hat map (three.js globe)
+   ========================================================================== */
+.world-section {
+  color: var(--cream);
+  overflow: hidden;
+  background:
+    radial-gradient(70% 60% at 72% 48%, rgba(255, 251, 243, .16) 0%, transparent 70%),
+    linear-gradient(170deg, var(--teal) 0%, var(--teal-deep) 62%, var(--teal-ink) 100%);
+}
+.world-grid {
+  max-width: 1320px;
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: minmax(0, 30rem) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+}
+.world-copy .title { font-size: clamp(2.1rem, 4.2vw, 3.7rem); }
+.world-intro { max-width: 27rem; margin-bottom: 2.2rem; color: rgba(255, 251, 243, .78); }
+
+.hat-card {
+  display: grid;
+  gap: .15rem;
+  padding: 1.1rem 0 1.3rem;
+  border-block: 1px solid rgba(255, 251, 243, .28);
+}
+.hat-card-count {
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .2em;
+  font-variant-numeric: tabular-nums;
+  opacity: .7;
+}
+.hat-card-count b { font-weight: 600; }
+.hat-card-count i { font-style: normal; }
+.hat-card-name {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: clamp(2.2rem, 4.6vw, 3.8rem);
+  line-height: 1;
+  letter-spacing: -.03em;
+  font-variation-settings: "SOFT" 50, "WONK" 1;
+}
+.hat-card-place {
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  opacity: .8;
+}
+.hat-card.is-home .hat-card-name { font-family: var(--script); font-weight: 400; font-size: clamp(3rem, 6.2vw, 5.2rem); letter-spacing: 0; color: var(--sand); }
+.hat-card.is-home .hat-card-place { color: #FF8A66; opacity: 1; }
+.hat-card.is-swap .hat-card-name,
+.hat-card.is-swap .hat-card-place { animation: swap .45s cubic-bezier(.2, .8, .2, 1) both; }
+.hat-card.is-swap .hat-card-place { animation-delay: .05s; }
+@keyframes swap { from { opacity: 0; transform: translateY(.5em); } }
+
+.world-controls { display: flex; flex-wrap: wrap; align-items: center; gap: .7rem; margin-top: 1.6rem; }
+.round-btn {
+  width: 3.1rem;
+  height: 3.1rem;
+  padding: 0;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  background: transparent;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color .3s ease, border-color .3s ease, transform .3s cubic-bezier(.3, 1.4, .5, 1);
+}
+.round-btn:hover { background: var(--flame); border-color: var(--flame); transform: translateY(-2px); }
+.world-controls .button { margin-left: .5rem; }
+
+.world-stage {
+  position: relative;
+  justify-self: center;
+  width: min(100%, 46rem);
+  aspect-ratio: 1;
+  opacity: 0;
+  transition: opacity .9s ease;
+}
+.world-stage.is-ready { opacity: 1; }
+.world-stage canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  touch-action: pan-y;
+}
+.world-stage.is-dragging canvas { cursor: grabbing; }
+.world-hint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  text-align: center;
+  font-size: .64rem;
+  font-weight: 600;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  opacity: .6;
+  pointer-events: none;
+}
+.no-globe .world-grid { grid-template-columns: minmax(0, 34rem); }
+.no-globe .world-stage { display: none; }
+
+/* ==========================================================================
    Menu
    ========================================================================== */
 .menu-section { background: var(--sand); }
@@ -740,7 +854,7 @@ main { position: relative; z-index: 2; }
   grid-template-columns: 1fr 1fr;
   align-items: center;
   gap: clamp(2.5rem, 7vw, 7rem);
-  max-width: 1500px;
+  max-width: 1320px;
   margin-inline: auto;
 }
 .story-copy .story-quote {
@@ -795,11 +909,84 @@ main { position: relative; z-index: 2; }
 }
 
 /* ==========================================================================
+   The place
+   ========================================================================== */
+.perks-section { background: var(--sand); }
+.perks-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: minmax(13.5rem, auto);
+  gap: clamp(.8rem, 1.4vw, 1.3rem);
+}
+.perk {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.5rem;
+  border-radius: 1.4rem;
+  background: var(--cream);
+  border: 1px solid rgba(34, 64, 61, .12);
+  overflow: hidden;
+  isolation: isolate;
+  transition: transform .5s cubic-bezier(.2, .8, .2, 1), box-shadow .5s ease, opacity .9s ease;
+}
+.perk.is-in:hover { transform: translateY(-6px); box-shadow: var(--shadow-soft); }
+.perk-icon {
+  width: 2.6rem;
+  margin-bottom: auto;
+  color: var(--flame);
+  transition: transform .5s cubic-bezier(.3, 1.4, .5, 1);
+}
+.perk:hover .perk-icon { transform: rotate(-8deg) scale(1.08); }
+.perk h3 {
+  margin: 1.4rem 0 .4rem;
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: clamp(1.25rem, 1.7vw, 1.55rem);
+  line-height: 1.05;
+  letter-spacing: -.025em;
+  font-variation-settings: "SOFT" 50, "WONK" 1;
+}
+.perk p { margin: 0; font-size: .9rem; line-height: 1.5; color: rgba(34, 64, 61, .76); }
+
+.perk-sunset {
+  grid-column: span 2;
+  grid-row: span 2;
+  padding: clamp(1.5rem, 2.6vw, 2.4rem);
+  border: 0;
+  color: var(--cream);
+  background: var(--flame-deep);
+}
+/* sky on top with the sun half under, sea below for the words to sit in */
+.perk-art {
+  position: absolute;
+  z-index: -1;
+  inset: 0 0 auto;
+  width: 100%;
+  height: 52%;
+  background: linear-gradient(180deg, var(--tan) 0%, var(--flame) 100%);
+}
+.perk-sunset .card-no { margin-bottom: auto; }
+.perk-sunset h3 { font-size: clamp(2rem, 3.6vw, 3.3rem); line-height: .95; margin-bottom: .7rem; }
+.perk-sunset p { font-size: 1rem; color: rgba(255, 251, 243, .9); max-width: 24rem; }
+
+.perk-kitchen {
+  grid-column: span 2;
+  border: 0;
+  color: var(--cream);
+  background: var(--teal);
+}
+.perk-kitchen .perk-icon { color: var(--sand); }
+.perk-kitchen h3 { font-size: clamp(1.5rem, 2.4vw, 2.1rem); max-width: 18ch; }
+.perk-kitchen p { color: rgba(255, 251, 243, .82); max-width: 30rem; }
+
+/* ==========================================================================
    Visit
    ========================================================================== */
 .visit-section { background: var(--sand-deep); }
 .visit-card {
-  max-width: 1500px;
+  max-width: 1320px;
   margin-inline: auto;
   display: grid;
   grid-template-columns: 1.1fr .9fr;
@@ -850,7 +1037,7 @@ main { position: relative; z-index: 2; }
   color: var(--cream);
 }
 .footer-inner {
-  max-width: 1500px;
+  max-width: 1320px;
   margin-inline: auto;
   display: flex;
   flex-wrap: wrap;
@@ -897,6 +1084,11 @@ main { position: relative; z-index: 2; }
   .layer-list li { padding: .5rem 0; }
   .build-stage { display: none; }
   .menu-card { min-height: 24rem; }
+  .nav-links { gap: 1.1rem; letter-spacing: .12em; }
+  .world-grid { grid-template-columns: 1fr; }
+  .world-stage { width: min(100%, 36rem); }
+  .perks-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: minmax(12rem, auto); }
+  .perk-sunset { grid-row: auto; min-height: 24rem; }
   .story-grid { grid-template-columns: 1fr; }
   .story-art { order: -1; min-height: 18rem; }
   .visit-card { grid-template-columns: 1fr; }
@@ -947,6 +1139,12 @@ main { position: relative; z-index: 2; }
   .build-meter { margin-top: 1rem; }
   .build-payoff .script { font-size: 1.7rem; }
 
+  .world-controls .button { margin-left: 0; }
+  .perks-grid { gap: .7rem; grid-auto-rows: auto; }
+  .perk { padding: 1.1rem; }
+  .perk-sunset { min-height: 22rem; padding: 1.4rem; }
+  .perk-kitchen { padding: 1.4rem; }
+
   .menu-grid { grid-template-columns: 1fr; }
   .menu-card { min-height: 23rem; }
   .menu-cta { flex-direction: column; align-items: flex-start; }
@@ -970,4 +1168,188 @@ main { position: relative; z-index: 2; }
   .layer-list li { padding: .26rem 0; }
   .layer-list strong { font-size: .94rem; }
   .build-copy .title { font-size: 1.45rem; }
+}
+
+/* ==========================================================================
+   Phones and tablets
+   ========================================================================== */
+:root {
+  --edge: max(clamp(1.15rem, 5vw, 5.5rem), env(safe-area-inset-left), env(safe-area-inset-right));
+}
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+a, button { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+
+/* The canvas is sized to the tallest the viewport ever gets, so the browser
+   toolbar sliding away does not resize it halfway through the build. */
+#scene { bottom: auto; height: 100vh; height: 100lvh; }
+
+.site-header { padding-top: max(1.1rem, env(safe-area-inset-top)); }
+.site-footer { padding-bottom: max(2.2rem, calc(env(safe-area-inset-bottom) + 1rem)); }
+
+@media (max-width: 1080px) {
+  /* Build: copy on top, the burger in whatever is left, the hat picker under
+     the thumb. scene.js fits the burger to .build-stage, so nothing overlaps. */
+  .build-sticky {
+    display: flex;
+    flex-direction: column;
+    padding-inline: var(--edge);
+    padding-bottom: max(1.1rem, env(safe-area-inset-bottom));
+  }
+  .build-grid { flex: 1; min-height: 0; display: flex; flex-direction: column; align-items: stretch; gap: 0; }
+  .build-stage { display: block; flex: 1; min-height: 0; }
+  .build-tools { justify-items: center; margin-top: .4rem; gap: .5rem; }
+  .hat-picker { justify-items: center; }
+  .build-payoff { order: -1; text-align: center; }
+  .build-payoff small { display: none; }
+
+  /* Hat map: the globe sits between the intro and the card, so the hat and
+     its name are on screen together. */
+  .world-grid { gap: 0; }
+  .world-copy { display: contents; }
+  .world-intro { margin-bottom: .6rem; }
+  .world-stage { order: 1; width: min(100%, 32rem); margin-bottom: 1.4rem; }
+  .hat-card { order: 2; }
+  .world-controls { order: 3; }
+}
+
+@media (max-width: 720px) {
+  .menu-toggle { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .nav-links {
+    gap: .9rem;
+    padding: 5rem var(--edge) max(1.5rem, env(safe-area-inset-bottom));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .nav-links a { display: inline-block; padding: .45rem 1.2rem; }
+
+  .hero { padding-inline: var(--edge); }
+  .section { padding-top: 5.75rem; padding-bottom: 4.5rem; }
+
+  .build-sticky { padding-top: 5.5rem; }
+  .layer-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(4, auto);
+    grid-auto-flow: column;
+    column-gap: 1.2rem;
+  }
+  .layer-list li { grid-template-columns: 1.5rem 1fr; gap: .4rem; padding: .32rem 0; transform: none; }
+  .layer-list li::before { display: none; }
+  .layer-list strong { font-size: .98rem; }
+  .build-meter { margin-top: .8rem; }
+  .build-payoff .script { font-size: 1.6rem; }
+  .hat-btn { min-height: 2.75rem; padding: .5rem .8rem; gap: .4rem; }
+
+  .menu-card { min-height: 0; padding: 1.4rem; }
+  .card-art { padding: 1rem 0 1.3rem; }
+  .card-art svg { width: 8.5rem; }
+
+  .story-art { min-height: 15rem; }
+  .sun { width: min(54%, 14rem); }
+}
+
+/* Upright tablets: copy to the top, so the loose burger has the bottom half */
+@media (min-width: 721px) and (max-width: 1080px) and (orientation: portrait) {
+  .hero { align-content: start; padding-top: 8.5rem; }
+}
+
+/* Small tablets keep the inline nav, tightened so it does not run off the edge */
+@media (min-width: 721px) and (max-width: 900px) {
+  .nav { gap: 1rem; }
+  .nav-links { gap: .75rem; font-size: .66rem; letter-spacing: .06em; }
+  .nav-cta { padding: .55rem .8rem; }
+}
+
+@media (max-width: 360px) {
+  .hat-btn svg { display: none; }
+  .hat-btn { padding-inline: .9rem; }
+}
+
+/* Short phones: drop the garnish so the burger keeps its room */
+@media (max-width: 720px) and (max-height: 640px) {
+  .build-copy .kicker, .hat-picker-note { display: none; }
+  .build-copy .title { font-size: 1.3rem; margin-bottom: .6rem; }
+  .build-copy .title br { display: none; }
+  .layer-list li { padding: .2rem 0; }
+  .layer-list strong { font-size: .92rem; }
+  .build-meter { margin-top: .55rem; }
+}
+
+/* Held sideways: list on the left, burger on the right, picker under it */
+@media (max-width: 1080px) and (orientation: landscape) {
+  .hero-copy { max-width: 54%; }
+  .build-sticky { --col: 24rem; }
+  .build-grid {
+    display: grid;
+    grid-template-columns: minmax(0, var(--col)) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+  .build-stage { margin-bottom: 7rem; }
+  .build-tools {
+    position: absolute;
+    left: calc(var(--edge) + var(--col) + 1.5rem);
+    right: var(--edge);
+    bottom: max(1.1rem, env(safe-area-inset-bottom));
+    margin: 0;
+  }
+}
+
+@media (max-width: 1080px) and (orientation: landscape) and (max-height: 560px) {
+  /* the header already carries the logo, and there is no height to say it twice */
+  .hero { padding-top: 6.25rem; }
+  .hero-logo { display: none; }
+  .scroll-cue { display: none; }
+
+  .build-sticky { --col: 21rem; padding-top: 5.6rem; padding-bottom: .7rem; }
+  .build-stage { margin-bottom: 4.6rem; }
+  .build-tools { bottom: max(.7rem, env(safe-area-inset-bottom)); gap: .2rem; }
+  .build-copy .kicker, .hat-picker-note { display: none; }
+  .build-copy .title { font-size: 1.3rem; margin-bottom: .6rem; }
+  .build-copy .title br { display: none; }
+  .layer-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(4, auto);
+    grid-auto-flow: column;
+    column-gap: 1.2rem;
+  }
+  .layer-list li { grid-template-columns: 1.5rem 1fr; gap: .4rem; padding: .2rem 0; transform: none; }
+  .layer-list li::before { display: none; }
+  .layer-list strong { font-size: .92rem; }
+  .build-meter { margin-top: .55rem; }
+  .build-payoff .script { font-size: 1.4rem; }
+}
+@media (max-width: 720px) and (orientation: landscape) and (max-height: 560px) {
+  .nav-links { grid-template-columns: auto auto; gap: .3rem 2rem; font-size: 1.4rem; }
+  .build-sticky { --col: 17rem; }
+  .build-copy .title { font-size: 1.15rem; }
+  .layer-list { column-gap: .8rem; }
+  .layer-list strong { font-size: .86rem; }
+}
+
+/* Fingers, not cursors */
+@media (pointer: coarse) {
+  .info-row a, .footer-link { display: inline-block; padding-block: .75rem; margin-block: -.75rem; }
+  .footer-link { padding-block: .85rem; margin-block: -.4rem; }
+  .skip-link { display: none; }
+}
+
+@media (hover: none) {
+  /* a hover that sticks after a tap reads as a bug */
+  .menu-card:hover, .perk.is-in:hover, .button:hover, .round-btn:hover, .hat-btn:hover,
+  .brand:hover .brand-logo, .perk:hover .perk-icon { transform: none; }
+  .menu-card:hover::before { transform: none; }
+  .menu-card:hover .card-art svg { animation: none; }
+  .perk.is-in:hover { box-shadow: none; }
+  .button.ghost:hover { background: transparent; }
+  .button.ghost:hover span { mix-blend-mode: normal; }
+  .round-btn:hover { background: transparent; border-color: currentColor; }
+  .button:active, .round-btn:active, .hat-btn:active { transform: scale(.96); }
+  .round-btn:active { background: var(--flame); border-color: var(--flame); }
+
+  /* full-screen blending and blur over a live canvas is the most expensive
+     thing on the page for a phone GPU, and the least noticed */
+  .grain { mix-blend-mode: normal; opacity: .06; }
+  .hat-buttons { backdrop-filter: none; }
 }

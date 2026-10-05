@@ -97,6 +97,8 @@
 
   /* Pointer parallax ------------------------------------------------------ */
   window.addEventListener('pointermove', function (e) {
+    /* a finger scrolling the page is not a cursor to lean toward */
+    if (e.pointerType && e.pointerType !== 'mouse') return;
     state.pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
     state.pointer.y = (e.clientY / window.innerHeight) * 2 - 1;
   }, { passive: true });
@@ -112,7 +114,7 @@
   var darkZones = Array.prototype.slice.call(document.querySelectorAll('[data-dark]'));
 
   var LAYERS = items.length || 7;
-  var SPAN = 0.30;
+  var SPAN = 0.19;
   var LAST = 0.88;
   var step = LAYERS > 1 ? (LAST - SPAN) / (LAYERS - 1) : 0;
 
@@ -128,35 +130,48 @@
     return clamp(-rect.top / travel, 0, 1);
   }
 
-  function tick() {
+  var lastTime = 0;
+  var lastP = -1;
+
+  function tick(now) {
+    /* Damp by elapsed time, not by frame, so the glide feels the same on a
+       60 Hz laptop and a 120 Hz phone. */
+    var dt = lastTime ? Math.min((now - lastTime) / 1000, 0.05) : 1 / 60;
+    lastTime = now;
+
     state.raw = rawProgress();
-    state.p += (state.raw - state.p) * (reduced ? 1 : 0.12);
+    state.p += (state.raw - state.p) * (reduced ? 1 : 1 - Math.exp(-7.5 * dt));
     if (Math.abs(state.raw - state.p) < 0.0004) state.p = state.raw;
 
     var p = state.p;
-
-    /* Backdrop dives from sand into deep teal as the burger comes together.
-       Type and chrome crossfade off the same number so nothing is ever
-       cream-on-cream halfway through. */
     var dive = clamp(p * 2.6, 0, 1);
-    if (backdrop) backdrop.style.setProperty('--dive', dive.toFixed(3));
-    if (sticky) sticky.style.setProperty('--mix', dive.toFixed(3));
 
-    /* Per-layer highlight */
-    for (var i = 0; i < items.length; i++) {
-      var t0 = i * step;
-      var on = clamp((p - t0) / (SPAN * 0.8), 0, 1);
-      items[i].style.setProperty('--on', on.toFixed(3));
-    }
+    /* Only touch the DOM when the number actually moved */
+    if (p !== lastP) {
+      lastP = p;
 
-    /* Meter */
-    var pct = Math.round(clamp(p / LAST, 0, 1) * 100);
-    if (meter && pct !== lastPct) {
-      meter.style.setProperty('--p', (pct / 100).toFixed(3));
-      if (meterValue) meterValue.textContent = pct + '%';
-      lastPct = pct;
+      /* Backdrop dives from sand into deep teal as the burger comes together.
+         Type and chrome crossfade off the same number so nothing is ever
+         cream-on-cream halfway through. */
+      if (backdrop) backdrop.style.setProperty('--dive', dive.toFixed(3));
+      if (sticky) sticky.style.setProperty('--mix', dive.toFixed(3));
+
+      /* Per-layer highlight */
+      for (var i = 0; i < items.length; i++) {
+        var t0 = i * step;
+        var on = clamp((p - t0) / (SPAN * 0.8), 0, 1);
+        items[i].style.setProperty('--on', on.toFixed(3));
+      }
+
+      /* Meter */
+      var pct = Math.round(clamp(p / LAST, 0, 1) * 100);
+      if (meter && pct !== lastPct) {
+        meter.style.setProperty('--p', (pct / 100).toFixed(3));
+        if (meterValue) meterValue.textContent = pct + '%';
+        lastPct = pct;
+      }
+      if (payoff) payoff.style.setProperty('--done', clamp((p - 0.9) / 0.07, 0, 1).toFixed(3));
     }
-    if (payoff) payoff.style.setProperty('--done', clamp((p - 0.9) / 0.07, 0, 1).toFixed(3));
 
     /* Header: hide on scroll down, invert over dark zones */
     if (header) {
