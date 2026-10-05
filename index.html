@@ -42,7 +42,17 @@
 </div>
 
 <div class="backdrop" aria-hidden="true"></div>
+<!-- the build section's photo: fades in over the teal as the burger assembles -->
+<div class="build-photo" aria-hidden="true">
+  <img src="/assets/photos/sm/chapou-8290.webp" srcset="/assets/photos/sm/chapou-8290.webp 640w, /assets/photos/chapou-8290.webp 1600w" sizes="100vw" alt="" width="1600" height="2000" loading="lazy" decoding="async">
+</div>
+<!-- the hero photo sits under the 3D canvas, so the burger floats over the sea -->
+<div class="hero-bg" aria-hidden="true">
+  <img src="/assets/photos/chapou-8616.webp" srcset="/assets/photos/sm/chapou-8616.webp 640w, /assets/photos/chapou-8616.webp 1600w" sizes="100vw" alt="" width="1600" height="2000" fetchpriority="high" decoding="async">
+</div>
 <div id="scene" aria-hidden="true"></div>
+<!-- the floating toys in the margins: props.js draws one over each .prop anchor -->
+<div id="props" aria-hidden="true"></div>
 <div class="grain" aria-hidden="true"></div>
 
 <header class="site-header">
@@ -53,17 +63,24 @@
         <img src="/assets/chapouu-logo-light.svg" alt="" aria-hidden="true" width="360" height="212">
       </span>
     </a>
-    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Open navigation">
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
     <ul class="nav-links" id="nav-links">
       <li><a href="#build">The build</a></li>
       <li><a href="#menu">Signatures</a></li>
+      <li class="nav-extra"><a href="#gallery">Photos</a></li>
       <li><a href="#hats">Hat map</a></li>
       <li><a href="#place">The place</a></li>
       <li><a href="#story">Our story</a></li>
       <li><a href="#visit">Find us</a></li>
-      <li><a class="nav-cta" href="https://www.instagram.com/chapouu_beachtreats/" target="_blank" rel="noreferrer noopener">Instagram ↗</a></li>
+      <li class="nav-actions">
+        <a class="nav-cta nav-menu" href="https://me-page.org/data/front/constructor/button-file/new-Menu-6a00fef81ec071.89401908.pdf" target="_blank" rel="noreferrer noopener">
+          <svg class="nav-menu-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 5v12a5 5 0 0 0 10 0V5M19 5v38M36 43V5c-6 4-9 11-9 20h9"/></svg>
+          <span>Menu</span><span class="sr-only"> (opens in a new tab)</span>
+        </a>
+        <a class="nav-cta" href="https://www.instagram.com/chapouu_beachtreats/" target="_blank" rel="noreferrer noopener">Instagram ↗</a>
+      </li>
     </ul>
   </nav>
 </header>
@@ -83,6 +100,14 @@
         <div class="hero-actions">
           <a class="button" href="#build"><span>Build the burger</span></a>
           <a class="button ghost" href="#visit"><span>Find us</span></a>
+        </div>
+        <div class="google-rating is-hero">
+          <a class="rating-badge" href="https://www.google.com/search?q=chapouu+amchit" target="_blank" rel="noreferrer noopener">
+            <span class="rating-score" aria-hidden="true">4.6</span>
+            <span class="rating-stars" aria-hidden="true"><span style="width: 92%">★★★★★</span>★★★★★</span>
+            <span class="rating-count"><span class="sr-only">Rated 4.6 out of 5 on </span>53 Google reviews<span class="sr-only"> (opens in a new tab)</span></span>
+          </a>
+          <a class="rating-write" href="https://www.google.com/search?q=chapouu+amchit" target="_blank" rel="noreferrer noopener">Leave a review ★<span class="sr-only"> (opens in a new tab)</span></a>
         </div>
       </div>
     </div>
@@ -160,6 +185,8 @@
 
   <!-- ===================================================== Menu -->
   <section class="section menu-section" id="menu">
+    <div class="prop" data-prop="fries" data-side="left" data-slot="top" data-depth="-.06" style="--y:16%" aria-hidden="true"></div>
+    <div class="prop" data-prop="pizza" data-side="right" data-slot="bottom" data-depth=".05" style="--y:62%" aria-hidden="true"></div>
     <div class="shell">
       <div class="menu-head">
         <div>
@@ -171,70 +198,117 @@
 
       <div class="menu-grid">
         <article class="menu-card is-hero reveal">
-          <span class="card-no">Signature</span>
+          <div class="card-top"><span class="card-no">Signature</span><span class="card-kind">Burgers</span></div>
           <div class="card-art" aria-hidden="true">
             <svg viewBox="0 0 120 120" fill="none">
-              <ellipse cx="60" cy="104" rx="40" ry="6" fill="rgba(0,0,0,.16)"/>
-              <path d="M20 50c0-18 18-30 40-30s40 12 40 30z" fill="#FFFBF3"/>
-              <circle cx="45" cy="34" r="2.8" fill="#CA7247"/><circle cx="61" cy="28" r="2.8" fill="#CA7247"/><circle cx="77" cy="36" r="2.8" fill="#CA7247"/>
-              <path d="M16 54h88a6 6 0 0 1 0 12H16a6 6 0 0 1 0-12z" fill="#6E9D6E"/>
-              <path d="M20 68h80v10H20z" fill="#5F3227"/>
-              <path d="M20 78h80v9H20z" fill="#E9A03C"/>
-              <path d="M20 87h80c0 11-10 18-24 18H44c-14 0-24-7-24-18z" fill="#FFFBF3"/>
+              <ellipse cx="60" cy="108" rx="42" ry="5" fill="rgba(0,0,0,.16)"/>
+              <path d="M20 90h80c0 9-10 15-24 15H44c-14 0-24-6-24-15z" fill="#FFFBF3"/>
+              <path d="M24 97c5 4 12 6 20 6h32c8 0 15-2 20-6" stroke="#F4E3C9" stroke-width="2.4" stroke-linecap="round"/>
+              <rect x="17" y="80" width="86" height="11" rx="5.5" fill="#5F3227"/>
+              <path d="M30 85.5h9M53 86h12M79 85.5h9" stroke="#3B1A12" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+              <path d="M15 75h90l-4 6H19z" fill="#E9A03C"/>
+              <path d="M30 80v7a2.6 2.6 0 0 0 5.2 0v-7zM72 80v9a2.6 2.6 0 0 0 5.2 0v-9z" fill="#E9A03C"/>
+              <rect x="17" y="65" width="86" height="11" rx="5.5" fill="#5F3227"/>
+              <path d="M28 70.5h10M52 71h12M78 70.5h10" stroke="#3B1A12" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+              <path d="M17 64c6-4 10 2 16-1s10 3 17 0 10 3 17 0 10 3 17 0 10 2 16-1v4c-6 3-10-2-16 1s-10-3-17 0-10-3-17 0-10-3-17 0-10-2-16 1z" fill="#AD523F"/>
+              <path d="M14 58c5 4 9-2 14 2s9-2 14 1 9-2 14 1 9-2 14 1 9-2 14 1 8-3 12-1v4H14z" fill="#6E9D6E"/>
+              <path d="M18 57c0-20 19-33 42-33s42 13 42 33z" fill="#FFFBF3"/>
+              <path d="M21 53c10 3 25 4 39 4s29-1 39-4" stroke="#F4E3C9" stroke-width="2.4" stroke-linecap="round"/>
+              <g fill="#CA7247"><ellipse cx="40" cy="38" rx="2.2" ry="1.3" transform="rotate(-25 40 38)"/><ellipse cx="52" cy="32" rx="2.2" ry="1.3" transform="rotate(-10 52 32)"/><ellipse cx="67" cy="31" rx="2.2" ry="1.3" transform="rotate(12 67 31)"/><ellipse cx="80" cy="37" rx="2.2" ry="1.3" transform="rotate(28 80 37)"/><ellipse cx="60" cy="42" rx="2.2" ry="1.3"/><ellipse cx="46" cy="46" rx="2.2" ry="1.3" transform="rotate(-15 46 46)"/><ellipse cx="74" cy="45" rx="2.2" ry="1.3" transform="rotate(15 74 45)"/></g>
+              <path d="M60 25V9" stroke="#5F3227" stroke-width="2" stroke-linecap="round"/>
+              <path d="M60 9l11 3.5L60 16z" fill="#E44621"/>
             </svg>
           </div>
           <h3>Chapouu Burger</h3>
           <p>Double beef, cheddar patty, bacon, cheddar and the special sauce. The one the whole site is about.</p>
+          <ul class="card-tags" aria-label="What's in it">
+            <li>Double beef</li><li>Cheddar</li><li>Bacon</li><li>Special sauce</li>
+          </ul>
         </article>
 
         <article class="menu-card reveal">
-          <span class="card-no">Signature</span>
+          <div class="card-top"><span class="card-no">Signature</span><span class="card-kind">Subs</span></div>
           <div class="card-art" aria-hidden="true">
             <svg viewBox="0 0 120 120" fill="none">
-              <ellipse cx="60" cy="100" rx="46" ry="6" fill="rgba(0,0,0,.16)"/>
-              <path d="M8 62c0-17 23-29 52-29s52 12 52 29z" fill="#FFFBF3"/>
+              <ellipse cx="60" cy="103" rx="48" ry="5" fill="rgba(0,0,0,.16)"/>
+              <rect x="1" y="66" width="20" height="4.4" rx="2.2" fill="#E9A03C" transform="rotate(-20 11 68)"/>
+              <rect x="99" y="64" width="20" height="4.4" rx="2.2" fill="#E9A03C" transform="rotate(22 109 66)"/>
+              <rect x="96" y="72" width="18" height="4.4" rx="2.2" fill="#CA7247" transform="rotate(-8 105 74)"/>
+              <path d="M8 87h104c0 9-9 15-22 15H30c-13 0-22-6-22-15z" fill="#FFFBF3"/>
+              <path d="M13 94c4 4 10 6 17 6h60c7 0 13-2 17-6" stroke="#F4E3C9" stroke-width="2.4" stroke-linecap="round"/>
+              <rect x="9" y="76" width="102" height="11" rx="4" fill="#5F3227"/>
+              <g fill="#3B1A12" opacity=".6"><circle cx="20" cy="81" r="1.3"/><circle cx="38" cy="83" r="1.3"/><circle cx="57" cy="80" r="1.3"/><circle cx="75" cy="83" r="1.3"/><circle cx="96" cy="81" r="1.3"/></g>
+              <path d="M9 72h102v5H9z" fill="#E9A03C"/>
+              <path d="M22 76v6a2.6 2.6 0 0 0 5.2 0v-6zM64 76v8a2.6 2.6 0 0 0 5.2 0v-8zM96 76v5a2.6 2.6 0 0 0 5.2 0v-5z" fill="#E9A03C"/>
+              <path d="M12 70c4-3 8 3 12 0s8 3 12 0 8 3 12 0 8 3 12 0 8 3 12 0 8 3 12 0 8 3 12 0 8 3 12 0" stroke="#CA7247" stroke-width="3" stroke-linecap="round"/>
+              <path d="M9 66c6-3 10 2 16 0s10 3 16 0 10 3 16 0 10 3 16 0 10 3 16 0 10 2 15-1v4c-5 3-9-2-15 1s-10-3-16 0-10-3-16 0-10-3-16 0-10-3-16 0-10-2-16 0z" fill="#AD523F"/>
+              <path d="M8 63c0-17 23-29 52-29s52 12 52 29z" fill="#FFFBF3"/>
+              <path d="M11 59c11 3 29 4 49 4s38-1 49-4" stroke="#F4E3C9" stroke-width="2.4" stroke-linecap="round"/>
               <path d="M30 44l6 10M52 40l5 10M76 44l5 10" stroke="#E9A03C" stroke-width="5" stroke-linecap="round"/>
-              <path d="M8 62c9 4 20 6 26 3s16 5 26 3 18 5 26 2 14 1 20-2v7H8z" fill="#6E9D6E"/>
-              <path d="M9 73h102v9H9z" fill="#5F3227"/>
-              <path d="M9 82h102v5H9z" fill="#E9A03C"/>
-              <path d="M8 87h104c0 10-9 17-22 17H30c-13 0-22-7-22-17z" fill="#FFFBF3"/>
             </svg>
           </div>
           <h3>Chapou Sub</h3>
           <p>Beef, chips, bacon, caramelised onion and cheddar, all under the same special sauce.</p>
+          <ul class="card-tags" aria-label="What's in it">
+            <li>Beef</li><li>Chips</li><li>Caramelised onion</li><li>Cheddar</li>
+          </ul>
         </article>
 
         <article class="menu-card reveal">
-          <span class="card-no">Signature</span>
+          <div class="card-top"><span class="card-no">Signature</span><span class="card-kind">To share</span></div>
           <div class="card-art" aria-hidden="true">
             <svg viewBox="0 0 120 120" fill="none">
-              <ellipse cx="60" cy="100" rx="44" ry="7" fill="rgba(0,0,0,.16)"/>
-              <path d="M12 74h96c0 12-10 22-24 22H36c-14 0-24-10-24-22z" fill="#FFFBF3"/>
-              <path d="M28 74c0-12 8-20 18-20s18 8 18 20z" fill="#E9A03C"/>
-              <path d="M60 74c0-14 7-24 16-24s16 10 16 24z" fill="#CA7247"/>
-              <rect x="20" y="44" width="9" height="30" rx="4.5" fill="#6E9D6E"/>
-              <rect x="34" y="36" width="9" height="38" rx="4.5" fill="#E44621"/>
-              <circle cx="84" cy="42" r="8" fill="#FFFBF3"/>
+              <ellipse cx="60" cy="104" rx="50" ry="6" fill="rgba(0,0,0,.16)"/>
+              <ellipse cx="60" cy="84" rx="54" ry="17" fill="#FFFBF3"/>
+              <ellipse cx="60" cy="82" rx="46" ry="12" fill="#F4E3C9"/>
+              <rect x="14" y="58" width="9" height="26" rx="4.5" fill="#E9A03C" transform="rotate(-12 18 71)"/>
+              <rect x="25" y="54" width="9" height="30" rx="4.5" fill="#CA7247" transform="rotate(-4 29 69)"/>
+              <path d="M27 60h5M27 66h5M27 72h5" stroke="#FFFBF3" stroke-width="1.6" stroke-linecap="round" opacity=".7"/>
+              <path d="M38 84c-2-14 6-22 16-22 9 0 15 7 13 22z" fill="#E9A03C"/>
+              <g fill="#CA7247"><circle cx="46" cy="70" r="1.4"/><circle cx="53" cy="67" r="1.4"/><circle cx="58" cy="74" r="1.4"/><circle cx="48" cy="78" r="1.4"/></g>
+              <circle cx="78" cy="70" r="11" fill="#CA7247"/>
+              <circle cx="78" cy="70" r="7.5" fill="#F4C9A8"/>
+              <circle cx="78" cy="70" r="3.6" fill="#E9A03C"/>
+              <path d="M88 84l8-20 10 18z" fill="#E9A03C"/>
+              <path d="M96 64l2 6M92 76l3 1" stroke="#CA7247" stroke-width="1.6" stroke-linecap="round"/>
+              <rect x="60" y="80" width="26" height="9" rx="3" fill="#FFFBF3" stroke="#E9A03C" stroke-width="2"/>
+              <g fill="#6E9D6E"><circle cx="66" cy="84" r="1.2"/><circle cx="73" cy="83" r="1.2"/><circle cx="80" cy="85" r="1.2"/></g>
+              <path d="M18 86c2 4 8 6 14 6s12-2 14-6z" fill="#FFFBF3" stroke="#F4E3C9" stroke-width="1.6"/>
+              <ellipse cx="32" cy="86" rx="13" ry="3" fill="#E44621"/>
             </svg>
           </div>
           <h3>Chapouu Combo</h3>
           <p>Cordon bleu, crispy chicken, tenders, garlic bread, wedges, nachos, mozzarella sticks. Built for the table, not the person.</p>
+          <ul class="card-tags" aria-label="What's in it">
+            <li>Cordon bleu</li><li>Tenders</li><li>Wedges</li><li>Nachos</li><li>Mozzarella sticks</li>
+          </ul>
         </article>
 
         <article class="menu-card reveal">
-          <span class="card-no">Signature</span>
+          <div class="card-top"><span class="card-no">Signature</span><span class="card-kind">Sweet</span></div>
           <div class="card-art" aria-hidden="true">
             <svg viewBox="0 0 120 120" fill="none">
-              <ellipse cx="60" cy="104" rx="26" ry="6" fill="rgba(0,0,0,.16)"/>
-              <path d="M46 40h28l-10 62a4 4 0 0 1-8 0z" fill="#FFFBF3"/>
-              <path d="M60 16 96 46c-8 6-22 9-36 9s-28-3-36-9z" fill="#E9A03C"/>
-              <path d="M60 16 96 46c-6 4-15 7-26 8L60 16z" fill="#CA7247"/>
-              <path d="M40 40c6 5 14 7 20 7" stroke="#5F3227" stroke-width="4" stroke-linecap="round"/>
-              <circle cx="70" cy="34" r="5" fill="#E44621"/>
+              <ellipse cx="60" cy="106" rx="30" ry="5" fill="rgba(0,0,0,.16)"/>
+              <path d="M44 44h32l-11 58a5 5 0 0 1-10 0z" fill="#FFFBF3"/>
+              <path d="M47 56h26M49 68h22M52 80h16" stroke="#F4E3C9" stroke-width="2" stroke-linecap="round"/>
+              <path d="M60 14 98 46c-9 7-23 10-38 10s-29-3-38-10z" fill="#E9A03C"/>
+              <path d="M60 14 98 46c-6 4-16 8-27 9L60 14z" fill="#CA7247"/>
+              <circle cx="44" cy="38" r="6" fill="#FFFBF3"/><circle cx="44" cy="38" r="2.2" fill="#F4E3C9"/>
+              <circle cx="54" cy="31" r="5.4" fill="#FFFBF3"/><circle cx="54" cy="31" r="2" fill="#F4E3C9"/>
+              <path d="M72 34c0-5 4-8 7-8s7 3 7 8c0 6-7 11-7 11s-7-5-7-11z" fill="#E44621"/>
+              <path d="M76 24l3 3 3-3" stroke="#6E9D6E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <g fill="#FFFBF3"><circle cx="77" cy="33" r=".8"/><circle cx="81" cy="35" r=".8"/><circle cx="78" cy="38" r=".8"/></g>
+              <rect x="58" y="36" width="12" height="7" rx="1.5" fill="#AD523F" transform="rotate(-14 64 39)"/>
+              <path d="M30 44c5 5 14 8 24 7s18-5 26-4 13 4 16 2" stroke="#5F3227" stroke-width="3" stroke-linecap="round"/>
+              <path d="M92 30a8 8 0 0 1 16 0z" fill="#FFFBF3"/>
+              <path d="M94 30h12l-2 8h-8z" fill="#E44621"/>
             </svg>
           </div>
           <h3>Chapouu Crepe</h3>
           <p>The house crepe, folded hot. Add strawberry, banana, lotus or a scoop on the side.</p>
+          <ul class="card-tags" aria-label="Add on">
+            <li>Strawberry</li><li>Banana</li><li>Lotus</li><li>A scoop</li>
+          </ul>
         </article>
       </div>
 
@@ -245,8 +319,60 @@
     </div>
   </section>
 
+  <!-- ===================================================== Gallery -->
+  <section class="section gallery-section" id="gallery">
+    <div class="prop" data-prop="soda" data-side="left" data-slot="top" data-depth=".05" style="--y:17%" aria-hidden="true"></div>
+    <div class="prop" data-prop="sombrero" data-side="right" data-slot="bottom" data-depth="-.05" style="--y:9%" aria-hidden="true"></div>
+    <div class="shell">
+      <div class="menu-head">
+        <div>
+          <p class="kicker reveal">Shot on the Boulevard</p>
+          <h2 class="title reveal">Real plates, real terrace, <em>real sea behind them.</em></h2>
+        </div>
+        <p class="reveal">No stock photos. This is what comes out of the kitchen and where it ends up. Tap any of them to see it big.</p>
+      </div>
+    </div>
+
+    <div class="reel" data-reel>
+      <ul class="reel-row" data-speed="1">
+        <li><button class="reel-tile" type="button" data-full="/assets/photos/chapou-8482.webp"><img src="/assets/photos/sm/chapou-8482.webp" alt="The Chapouu Burger on a board, a skewer through the sesame bun" width="640" height="800" loading="lazy" decoding="async"></button></li>
+        <li><button class="reel-tile" type="button" data-full="/assets/photos/chapou-8378.webp"><img src="/assets/photos/sm/chapou-8378.webp" alt="A sub and fries on a board, riding on the seat of a yellow Vespa" width="640" height="800" loading="lazy" decoding="async"></button></li>
+        <li><button class="reel-tile" type="button" data-full="/assets/photos/chapou-8616.webp"><img src="/assets/photos/sm/chapou-8616.webp" alt="A bowl of mac and cheese held up over the rocks and the sea" width="640" height="800" loading="lazy" decoding="async"></button></li>
+        <li><button class="reel-tile" type="button" data-full="/assets/photos/chapou-8282.webp"><img src="/assets/photos/sm/chapou-8282.webp" alt="Crispy chicken and glazed wings side by side, with a pot of honey mustard" width="640" height="800" loading="lazy" decoding="async"></button></li>
+        <li><button class="reel-tile" type="button" data-full="/assets/photos/chapou-8460.webp"><img src="/assets/photos/sm/chapou-8460.webp" alt="Close up of wedges under cheese sauce and a barbecue drizzle" width="640" height="800" loading="lazy" decoding="async"></button></li>
+        <li><button class="reel-tile" type="button" data-full="/assets/photos/chapou-8536.webp"><img src="/assets/photos/sm/chapou-8536.webp" alt="Grilled chicken platter with fries, salad and garlic sauce" width="640" height="800" loading="lazy" decoding="async"></button></li>
+        <li><button class="reel-tile" type="button" data-full="/assets/photos/chapou-8381.webp"><img src="/assets/photos/sm/chapou-8381.webp" alt="A guest holding up a sub next to a yellow Vespa on the seafront" width="640" height="800" loading="lazy" decoding="async"></button></li>
+        <li><button class="reel-tile" type="button" data-full="/assets/photos/chapou-8420.webp"><img src="/assets/photos/sm/chapou-8420.webp" alt="Cheesy garlic bread, fresh out of the oven" width="640" height="800" loading="lazy" decoding="async"></button></li>
+        <li><button class="reel-tile" type="button" data-full="/assets/photos/chapou-8327.webp"><img src="/assets/photos/sm/chapou-8327.webp" alt="A table spread from above: chicken baskets, dips and cold drinks" width="640" height="800" loading="lazy" decoding="async"></button></li>
+        <li><button class="reel-tile" type="button" data-full="/assets/photos/chapou-8513.webp"><img src="/assets/photos/sm/chapou-8513.webp" alt="Two burgers held up against the sea" width="640" height="800" loading="lazy" decoding="async"></button></li>
+        <li><button class="reel-tile" type="button" data-full="/assets/photos/chapou-8453.webp"><img src="/assets/photos/sm/chapou-8453.webp" alt="Sauce drizzled over a bowl of loaded wedges" width="640" height="800" loading="lazy" decoding="async"></button></li>
+        <li><button class="reel-tile" type="button" data-full="/assets/photos/chapou-8349.webp"><img src="/assets/photos/sm/chapou-8349.webp" alt="A toasted sub cut in half and stacked, fries on the side" width="640" height="800" loading="lazy" decoding="async"></button></li>
+        <li><button class="reel-tile" type="button" data-full="/assets/photos/chapou-8570.webp"><img src="/assets/photos/sm/chapou-8570.webp" alt="A grilled chicken plate, fork and knife going in" width="640" height="800" loading="lazy" decoding="async"></button></li>
+        <li><button class="reel-tile" type="button" data-full="/assets/photos/chapou-8314.webp"><img src="/assets/photos/sm/chapou-8314.webp" alt="A crispy chicken strip dunked into garlic sauce" width="640" height="800" loading="lazy" decoding="async"></button></li>
+      </ul>
+      <ul class="reel-row" data-speed="-1">
+        <li><button class="reel-tile" type="button" data-full="/assets/photos/chapou-8391.webp"><img src="/assets/photos/sm/chapou-8391.webp" alt="Taking a bite on a yellow Vespa with the sea behind" width="640" height="800" loading="lazy" decoding="async"></button></li>
+        <li><button class="reel-tile" type="button" data-full="/assets/photos/chapou-8491.webp"><img src="/assets/photos/sm/chapou-8491.webp" alt="The burger again, cheese melting over the patty" width="640" height="800" loading="lazy" decoding="async"></button></li>
+        <li><button class="reel-tile" type="button" data-full="/assets/photos/chapou-8624.webp"><img src="/assets/photos/sm/chapou-8624.webp" alt="A forkful of mac and cheese, the cheese still pulling" width="640" height="800" loading="lazy" decoding="async"></button></li>
+        <li><button class="reel-tile" type="button" data-full="/assets/photos/chapou-8278.webp"><img src="/assets/photos/sm/chapou-8278.webp" alt="Golden fried chicken strips with a pot of garlic sauce" width="640" height="800" loading="lazy" decoding="async"></button></li>
+        <li><button class="reel-tile" type="button" data-full="/assets/photos/chapou-8474.webp"><img src="/assets/photos/sm/chapou-8474.webp" alt="A plate of loaded wedges held up in one hand" width="640" height="800" loading="lazy" decoding="async"></button></li>
+        <li><button class="reel-tile" type="button" data-full="/assets/photos/chapou-8383.webp"><img src="/assets/photos/sm/chapou-8383.webp" alt="A guest showing off a sub on the Boulevard, Vespa parked behind" width="640" height="800" loading="lazy" decoding="async"></button></li>
+        <li><button class="reel-tile" type="button" data-full="/assets/photos/chapou-8540.webp"><img src="/assets/photos/sm/chapou-8540.webp" alt="Grilled chicken served with fries and coleslaw" width="640" height="800" loading="lazy" decoding="async"></button></li>
+        <li><button class="reel-tile" type="button" data-full="/assets/photos/chapou-8274.webp"><img src="/assets/photos/sm/chapou-8274.webp" alt="Baskets of fried chicken and wings with dips on a wooden table" width="640" height="800" loading="lazy" decoding="async"></button></li>
+        <li><button class="reel-tile" type="button" data-full="/assets/photos/chapou-8498.webp"><img src="/assets/photos/sm/chapou-8498.webp" alt="A burger held in two hands, garlic bread and fries behind it" width="640" height="800" loading="lazy" decoding="async"></button></li>
+        <li><button class="reel-tile" type="button" data-full="/assets/photos/chapou-8373.webp"><img src="/assets/photos/sm/chapou-8373.webp" alt="Sub and fries on a yellow Vespa, a ship out on the water" width="640" height="800" loading="lazy" decoding="async"></button></li>
+        <li><button class="reel-tile" type="button" data-full="/assets/photos/chapou-8435.webp"><img src="/assets/photos/sm/chapou-8435.webp" alt="Loaded wedges on a terrace table" width="640" height="800" loading="lazy" decoding="async"></button></li>
+        <li><button class="reel-tile" type="button" data-full="/assets/photos/chapou-8320.webp"><img src="/assets/photos/sm/chapou-8320.webp" alt="A smiling guest dipping fried chicken into sauce" width="640" height="800" loading="lazy" decoding="async"></button></li>
+        <li><button class="reel-tile" type="button" data-full="/assets/photos/chapou-8353.webp"><img src="/assets/photos/sm/chapou-8353.webp" alt="Both halves of a loaded sub with fries, on Chapouu paper" width="640" height="800" loading="lazy" decoding="async"></button></li>
+        <li><button class="reel-tile" type="button" data-full="/assets/photos/chapou-8290.webp"><img src="/assets/photos/sm/chapou-8290.webp" alt="Wings and cheesy bites in wire baskets with dipping sauces" width="640" height="800" loading="lazy" decoding="async"></button></li>
+        <li><button class="reel-tile" type="button" data-full="/assets/photos/chapou-8374.webp"><img src="/assets/photos/sm/chapou-8374.webp" alt="Sub and fries on the seat of a yellow Vespa on the Boulevard" width="640" height="800" loading="lazy" decoding="async"></button></li>
+      </ul>
+    </div>
+  </section>
+
   <!-- ===================================================== Hat map -->
   <section class="section world-section" id="hats" data-dark>
+    <div class="prop" data-prop="beachball" data-side="left" data-slot="bottom" data-depth="-.06" style="--y:84%" aria-hidden="true"></div>
     <div class="world-grid">
       <div class="world-copy">
         <p class="kicker reveal">Chapouu means hat</p>
@@ -274,6 +400,8 @@
 
   <!-- ===================================================== The place -->
   <section class="section perks-section" id="place">
+    <div class="prop" data-prop="basketball" data-side="right" data-slot="top" data-depth="-.05" style="--y:18%" aria-hidden="true"></div>
+    <div class="prop" data-prop="die" data-side="left" data-slot="bottom" data-depth=".06" style="--y:64%" aria-hidden="true"></div>
     <div class="shell">
       <div class="menu-head">
         <div>
@@ -356,9 +484,17 @@
 
   <!-- ===================================================== Story -->
   <section class="section story-section" id="story" data-dark>
+    <div class="prop" data-prop="strawberry" data-side="left" data-slot="top" data-depth=".05" style="--y:13%" aria-hidden="true"></div>
+    <div class="prop" data-prop="watermelon" data-side="right" data-slot="bottom" data-depth="-.05" style="--y:80%" aria-hidden="true"></div>
+    <div class="sec-bg" data-drift aria-hidden="true" style="--focus:50% 40%">
+      <img src="/assets/photos/sm/chapou-8540.webp" srcset="/assets/photos/sm/chapou-8540.webp 640w, /assets/photos/chapou-8540.webp 1600w" sizes="100vw" alt="" width="1600" height="2000" loading="lazy" decoding="async">
+    </div>
     <div class="story-grid">
-      <div class="story-art reveal" aria-hidden="true">
-        <div class="sun"><img src="/assets/chapouu-mark.svg" alt="" width="200" height="200"></div>
+      <div class="story-art reveal">
+        <div class="sun has-photo">
+          <img class="sun-photo" src="/assets/photos/sm/chapou-8391.webp" srcset="/assets/photos/sm/chapou-8391.webp 640w, /assets/photos/chapou-8391.webp 1600w" sizes="(max-width: 720px) 60vw, 26rem" alt="Lunch on a yellow Vespa on the Boulevard, the sea right behind" width="640" height="800" loading="lazy" decoding="async">
+          <span class="sun-badge" aria-hidden="true"><img src="/assets/chapouu-mark.svg" alt="" width="200" height="200"></span>
+        </div>
       </div>
       <div class="story-copy">
         <p class="kicker reveal">Since day one</p>
@@ -375,6 +511,11 @@
 
   <!-- ===================================================== Visit -->
   <section class="section visit-section" id="visit">
+    <div class="prop" data-prop="icecream" data-side="right" data-slot="top" data-depth="-.05" style="--y:18%" aria-hidden="true"></div>
+    <div class="prop" data-prop="lifebuoy" data-side="left" data-slot="bottom" data-depth=".06" style="--y:76%" aria-hidden="true"></div>
+    <div class="sec-bg" data-drift aria-hidden="true" style="--focus:50% 18%">
+      <img src="/assets/photos/sm/chapou-8373.webp" srcset="/assets/photos/sm/chapou-8373.webp 640w, /assets/photos/chapou-8373.webp 1600w" sizes="100vw" alt="" width="1600" height="2000" loading="lazy" decoding="async">
+    </div>
     <div class="visit-card reveal">
       <div>
         <p class="kicker">Come by</p>
@@ -383,6 +524,14 @@
         <div class="hero-actions">
           <a class="button" href="tel:+96181404258"><span>Call +961 81 40 42 58</span></a>
           <a class="button ghost" href="https://www.instagram.com/chapouu_beachtreats/" target="_blank" rel="noreferrer noopener"><span>Instagram ↗</span></a>
+        </div>
+        <div class="google-rating">
+          <a class="rating-badge" href="https://www.google.com/search?q=chapouu+amchit" target="_blank" rel="noreferrer noopener">
+            <span class="rating-score" aria-hidden="true">4.6</span>
+            <span class="rating-stars" aria-hidden="true"><span style="width: 92%">★★★★★</span>★★★★★</span>
+            <span class="rating-count"><span class="sr-only">Rated 4.6 out of 5 on </span>53 Google reviews<span class="sr-only"> (opens in a new tab)</span></span>
+          </a>
+          <a class="button ghost" href="https://www.google.com/search?q=chapouu+amchit" target="_blank" rel="noreferrer noopener"><span>Leave a review ★</span></a>
         </div>
       </div>
       <dl class="info-list">
@@ -419,12 +568,24 @@
     <p class="footer-links">
       <a class="footer-link" href="https://me-page.org/data/front/constructor/button-file/new-Menu-6a00fef81ec071.89401908.pdf" target="_blank" rel="noreferrer noopener">Menu ↗</a>
       <a class="footer-link" href="https://www.instagram.com/chapouu_beachtreats/" target="_blank" rel="noreferrer noopener">Instagram ↗</a>
+      <a class="footer-link" href="https://www.google.com/search?q=chapouu+amchit" target="_blank" rel="noreferrer noopener">★ 4.6 on Google ↗</a>
     </p>
   </div>
 </footer>
 
+<dialog class="lightbox" aria-label="Photo viewer">
+  <figure class="lightbox-frame">
+    <img class="lightbox-img" src="" alt="">
+    <figcaption class="lightbox-caption"><span class="lightbox-count"></span> <span class="lightbox-text"></span></figcaption>
+  </figure>
+  <button class="round-btn lightbox-close" type="button" data-lightbox="close" aria-label="Close photo">✕</button>
+  <button class="round-btn lightbox-prev" type="button" data-lightbox="prev" aria-label="Previous photo">←</button>
+  <button class="round-btn lightbox-next" type="button" data-lightbox="next" aria-label="Next photo">→</button>
+</dialog>
+
 <script src="/assets/site.js" defer></script>
 <script type="module" src="/assets/scene.js"></script>
 <script type="module" src="/assets/world.js"></script>
+<script type="module" src="/assets/props.js"></script>
 </body>
 </html>

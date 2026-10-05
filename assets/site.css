@@ -145,6 +145,35 @@ button { font: inherit; color: inherit; }
      of a value that changes every frame only makes it trail behind */
 }
 
+/* Build photo: sits over the teal backdrop and under the canvas. It rides the
+   same --dive as the backdrop, so it only appears as the page turns dark. The
+   image is kept low so the teal still reads, and the left side is pulled back
+   down to ink so the layer list stays crisp. */
+.build-photo {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: calc(var(--dive, 0) * var(--dive, 0));
+}
+.build-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 40%;
+  opacity: .52;
+  filter: saturate(.85);
+}
+.build-photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(27, 57, 55, .92) 0%, rgba(27, 57, 55, .62) 36%, rgba(27, 57, 55, .12) 70%, transparent 100%),
+    linear-gradient(180deg, rgba(27, 57, 55, .55) 0%, transparent 22%);
+}
+
 #scene {
   position: fixed;
   inset: 0;
@@ -157,6 +186,93 @@ button { font: inherit; color: inherit; }
 #scene canvas { display: block; width: 100%; height: 100%; }
 
 .no-webgl #scene { display: none; }
+
+/* Floating props: one canvas over the page that never takes a click. Each
+   prop is drawn on an empty .prop anchor, so where it sits is decided here. */
+#props {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .9s ease;
+}
+#props.is-ready { opacity: 1; }
+#props canvas { display: block; width: 100%; height: 100%; }
+.no-webgl #props { display: none; }
+
+/* Wide screens: in the side gutters, centred in whatever room the 1320px
+   column leaves, peeking off the edge when there is not much of it. */
+.prop {
+  --gx: max(calc(var(--edge) * .62), calc((100% - 1320px) / 4));
+  position: absolute;
+  top: var(--y, 20%);
+  left: var(--gx);
+  width: clamp(6rem, 10.5vw, 12rem);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.prop[data-side="right"] { left: auto; right: var(--gx); transform: translate(50%, -50%); }
+
+/* Narrower: the gutters are too thin, so the props move into the section's
+   top or bottom padding, clear of the words. */
+@media (max-width: 1080px) {
+  .prop {
+    --gx: clamp(2.6rem, 7vw, 4.5rem);
+    top: 2.75rem;
+    width: clamp(4rem, 7vw, 5.25rem);
+  }
+  .prop[data-slot="bottom"] { top: calc(100% - 2.4rem); }
+}
+
+/* Hero photo: under the canvas, over the backdrop, scrolling away with the
+   hero. Sand washes in from the copy's side so the words stay crisp, and the
+   bottom dissolves into the backdrop instead of ending on a hard edge. */
+.hero-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 0;
+  height: 100vh;
+  height: 100lvh;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(180deg, #000 62%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 62%, transparent 100%);
+}
+.hero-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 0%;
+  animation: hero-drift 24s ease-in-out infinite alternate;
+}
+.hero-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, var(--sand) 6%, rgba(253, 243, 227, .9) 32%, rgba(253, 243, 227, .4) 58%, rgba(253, 243, 227, .08) 100%),
+    linear-gradient(180deg, rgba(255, 251, 243, .55) 0%, transparent 22%);
+}
+@keyframes hero-drift { from { transform: scale(1.04); } to { transform: scale(1.1) translateX(-1.5%); } }
+
+/* Upright screens would show the whole portrait photo, fork and bowl behind
+   the copy. Zoom into the strip of water and rocks along its top instead. */
+@media (orientation: portrait) {
+  .hero-bg img {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: auto;
+    max-width: none;
+    height: 260%;
+    translate: -58% 0;
+    transform-origin: 50% 0;
+  }
+}
 
 /* ==========================================================================
    Header
@@ -246,6 +362,14 @@ button { font: inherit; color: inherit; }
   transition: background-color .3s ease, color .3s ease;
 }
 .nav-cta:hover { background: var(--flame); border-color: var(--flame); color: var(--cream); }
+/* Menu and Instagram sit together as one pair at the end of the bar */
+.nav-actions { display: flex; align-items: center; gap: .5rem; }
+.nav-links .nav-menu { display: inline-flex; align-items: center; gap: .5em; }
+.nav-menu-icon { width: 1.6em; height: 1.6em; margin-block: -.3em; flex: none; transition: transform .4s cubic-bezier(.3, 1.4, .5, 1); }
+.nav-menu:hover .nav-menu-icon, .nav-menu:focus-visible .nav-menu-icon { transform: rotate(-12deg) scale(1.12); }
+/* the full-menu link is the header's main action, so it is filled */
+.site-header .nav-menu, .site-header.on-dark .nav-menu { background: var(--flame); border-color: var(--flame); color: var(--cream); }
+.site-header .nav-menu:hover, .site-header.on-dark .nav-menu:hover { background: var(--flame-deep); border-color: var(--flame-deep); }
 
 body.nav-open .menu-toggle { color: var(--cream); border-color: rgba(255, 251, 243, .55); }
 body.nav-open .brand { position: relative; z-index: 2; }
@@ -273,6 +397,10 @@ body.nav-open .brand-logo img + img { opacity: 1; }
 .menu-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(6.3px) rotate(45deg); }
 .menu-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
 .menu-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6.3px) rotate(-45deg); }
+.menu-toggle:focus-visible { border-radius: 50%; outline-offset: 4px; }
+/* Over the teal overlay the flame ring is low-contrast, so switch to cream. */
+body.nav-open .menu-toggle:focus-visible,
+body.nav-open .nav-links :focus-visible { outline-color: var(--cream); }
 
 /* ==========================================================================
    Shared bits
@@ -755,6 +883,52 @@ main { position: relative; z-index: 2; }
 .no-globe .world-stage { display: none; }
 
 /* ==========================================================================
+   Section photo backdrops
+   A photo sits behind the section, tinted with that section's own colour so
+   the copy stays readable. Script nudges --drift on scroll for a slow parallax.
+   ========================================================================== */
+.story-section, .visit-section { isolation: isolate; }
+.sec-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.sec-bg img {
+  position: absolute;
+  left: 0;
+  top: -12%;
+  width: 100%;
+  height: 124%;
+  object-fit: cover;
+  object-position: var(--focus, 50% 50%);
+  transform: translate3d(0, var(--drift, 0px), 0);
+  will-change: transform;
+}
+.sec-bg::after { content: ""; position: absolute; inset: 0; }
+
+/* sand section: the photo shows through as a warm wash that fades back to sand at the top */
+.visit-section .sec-bg img { opacity: .75; }
+.visit-section .sec-bg::after {
+  background:
+    linear-gradient(180deg, var(--sand) 0%, rgba(244, 227, 201, 0) 24%),
+    linear-gradient(180deg, rgba(244, 227, 201, .15) 0%, rgba(244, 227, 201, .45) 100%);
+}
+
+/* the dark section keeps its teal: photo sits under a heavy ink tint */
+.story-section .sec-bg img { opacity: .5; filter: saturate(.9); }
+.story-section .sec-bg::after {
+  background:
+    radial-gradient(90% 70% at 20% 50%, rgba(27, 57, 55, .35) 0%, transparent 70%),
+    linear-gradient(180deg, var(--teal-ink) 0%, rgba(27, 57, 55, .62) 28%, rgba(27, 57, 55, .8) 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sec-bg img { transform: none; will-change: auto; }
+}
+
+/* ==========================================================================
    Menu
    ========================================================================== */
 .menu-section { background: var(--sand); }
@@ -841,6 +1015,101 @@ main { position: relative; z-index: 2; }
 }
 .menu-cta p { margin: 0; max-width: 34rem; color: rgba(34, 64, 61, .78); }
 
+/* Card details: what kind of plate it is, and what goes in it */
+.card-top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.card-kind {
+  padding: .3rem .75rem;
+  border: 1px solid rgba(255, 251, 243, .35);
+  border-radius: 999px;
+  font-size: .66rem;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+  margin: 1.1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.card-tags li {
+  padding: .3rem .7rem;
+  border-radius: 999px;
+  background: rgba(255, 251, 243, .14);
+  font-size: .74rem;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--cream);
+}
+
+/* ==========================================================================
+   Gallery reel
+   ========================================================================== */
+.gallery-section {
+  --tile: clamp(10.5rem, 19vw, 17rem);
+  --gap: clamp(.7rem, 1.2vw, 1.1rem);
+  padding-inline: 0;
+  background: var(--sand-deep);
+  overflow: hidden;
+}
+/* the reel runs edge to edge, so the heading carries the page margin itself */
+.gallery-section .shell { max-width: calc(1320px + 2 * var(--edge)); padding-inline: var(--edge); }
+.gallery-section .menu-head .title { max-width: 16ch; }
+
+.reel { display: grid; gap: var(--gap); }
+.reel-row {
+  display: flex;
+  gap: var(--gap);
+  margin: 0;
+  padding: 1rem var(--edge);
+  list-style: none;
+  /* without the script (or with reduced motion) each row is a plain swipe */
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+}
+.reel-row::-webkit-scrollbar { display: none; }
+.reel-row li { flex: none; scroll-snap-align: center; }
+
+.reel.is-live {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+}
+.reel.is-live .reel-row {
+  width: max-content;
+  padding-inline: 0;
+  overflow: visible;
+  will-change: transform;
+}
+
+.reel-tile {
+  display: block;
+  width: var(--tile);
+  aspect-ratio: 4 / 5;
+  padding: 0;
+  border: 0;
+  border-radius: 1.2rem;
+  overflow: hidden;
+  background: var(--sand);
+  cursor: zoom-in;
+  box-shadow: 0 26px 50px -34px rgba(27, 57, 55, .7);
+  transition: transform .5s cubic-bezier(.2, .8, .2, 1), box-shadow .5s ease;
+}
+.reel-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1s cubic-bezier(.2, .8, .2, 1);
+}
+.reel-tile:focus-visible { outline-offset: 4px; border-radius: 1.2rem; }
+@media (hover: hover) {
+  .reel-tile:hover { transform: translateY(-8px) rotate(-1.4deg); box-shadow: var(--shadow-soft); }
+  .reel-row li:nth-child(even) .reel-tile:hover { transform: translateY(-8px) rotate(1.4deg); }
+  .reel-tile:hover img { transform: scale(1.06); }
+}
+
 /* ==========================================================================
    Story
    ========================================================================== */
@@ -892,6 +1161,39 @@ main { position: relative; z-index: 2; }
 }
 .sun img { width: 58%; animation: spin 42s linear infinite reverse; }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* The same rings, with the Boulevard inside them; only the dashes turn */
+.sun.has-photo { background: var(--teal); animation: none; }
+.sun.has-photo .sun-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 42%;
+  animation: none;
+}
+.sun.has-photo::before {
+  z-index: 1;
+  border-color: rgba(255, 251, 243, .6);
+  animation: spin 60s linear infinite;
+}
+.sun-badge {
+  position: absolute;
+  z-index: 2;
+  right: -4%;
+  bottom: 0;
+  display: grid;
+  place-items: center;
+  width: 31%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 36% 28%, #FFFDF8, var(--sand) 72%);
+  box-shadow: 0 0 0 .45rem var(--flame), 0 18px 40px -14px rgba(0, 0, 0, .65);
+}
+.sun.has-photo .sun-badge img { width: 68%; animation: bob 4.5s ease-in-out infinite alternate; }
+@keyframes bob { from { transform: rotate(6deg); } to { transform: rotate(-8deg) translateY(-5%); } }
 
 .story-notes {
   display: grid;
@@ -1026,6 +1328,78 @@ main { position: relative; z-index: 2; }
 .info-row a { text-decoration-thickness: 1px; text-underline-offset: .28rem; }
 .info-row a:hover { color: var(--flame); }
 
+/* Google rating ---------------------------------------------------------- */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+.google-rating {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.4rem;
+  margin-top: 2rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid rgba(34, 64, 61, .14);
+}
+.rating-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .7rem;
+  text-decoration: none;
+}
+.rating-score {
+  font-family: var(--display);
+  font-size: 2.2rem;
+  font-weight: 600;
+  line-height: 1;
+}
+/* Five stars, with a second set clipped to 92% (4.6 / 5) laid over the first. */
+.rating-stars {
+  position: relative;
+  display: inline-block;
+  color: rgba(34, 64, 61, .2);
+  font-size: 1.15rem;
+  letter-spacing: .08em;
+  line-height: 1;
+  white-space: nowrap;
+}
+.rating-stars span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  overflow: hidden;
+  color: #F2A516;
+}
+.rating-count {
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: .3rem;
+}
+.rating-badge:hover .rating-count { color: var(--flame); }
+.rating-write {
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  text-underline-offset: .3rem;
+}
+.rating-write:hover { color: var(--flame); }
+/* Hero variant: sits right under the buttons, no divider. */
+.google-rating.is-hero { margin-top: clamp(1.2rem, 2.6vh, 1.8rem); padding-top: 0; border-top: 0; }
+.is-hero .rating-score { font-size: 1.7rem; }
+.is-hero .rating-stars { font-size: 1rem; }
+
 /* ==========================================================================
    Footer
    ========================================================================== */
@@ -1056,6 +1430,50 @@ main { position: relative; z-index: 2; }
 }
 .footer-link:hover { color: var(--flame); }
 .footer-links { display: flex; gap: 1.6rem; margin: 0; }
+
+/* ==========================================================================
+   Lightbox
+   ========================================================================== */
+.lightbox {
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: clamp(1rem, 3vw, 2.5rem);
+  border: 0;
+  background: rgba(27, 57, 55, .95);
+  color: var(--cream);
+  overscroll-behavior: contain;
+}
+.lightbox[open] { display: grid; place-items: center; animation: lightbox-in .35s ease; }
+.lightbox::backdrop { background: transparent; }
+@keyframes lightbox-in { from { opacity: 0; } }
+
+.lightbox-frame { display: grid; justify-items: center; gap: 1rem; margin: 0; }
+.lightbox-img {
+  width: auto;
+  max-width: min(100%, 64rem);
+  max-height: calc(100dvh - 9rem);
+  border-radius: 1.1rem;
+  box-shadow: 0 40px 90px -40px rgba(0, 0, 0, .8);
+  transition: opacity .3s ease, transform .45s cubic-bezier(.2, .8, .2, 1);
+}
+.lightbox-img.is-loading { opacity: .35; transform: scale(.985); }
+.lightbox-caption { max-width: 38rem; text-align: center; font-size: .95rem; color: rgba(255, 251, 243, .84); }
+.lightbox-count {
+  margin-right: .5rem;
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .18em;
+  color: var(--tan);
+}
+.lightbox .round-btn { position: fixed; color: var(--cream); background: rgba(27, 57, 55, .55); }
+.lightbox-close { top: max(1rem, env(safe-area-inset-top)); right: var(--edge); }
+.lightbox-prev, .lightbox-next { top: 50%; margin-top: -1.55rem; }
+.lightbox-prev { left: var(--edge); }
+.lightbox-next { right: var(--edge); }
 
 /* ==========================================================================
    Responsive
@@ -1119,6 +1537,11 @@ main { position: relative; z-index: 2; }
   .nav-links.is-open { clip-path: circle(150% at 100% 0); }
   .nav-cta { border: 0; padding: 0; }
   .nav-cta:hover { background: none; color: inherit; }
+  /* in the full-screen phone menu the pair unpacks into ordinary links, like the rest */
+  .nav-actions { display: contents; }
+  .nav-links .nav-menu { justify-self: center; }
+  .site-header .nav-menu, .site-header.on-dark .nav-menu,
+  .site-header .nav-menu:hover, .site-header.on-dark .nav-menu:hover { background: none; color: inherit; }
   .menu-toggle { position: relative; z-index: 2; }
 
   .hero {
@@ -1246,11 +1669,42 @@ a, button { -webkit-tap-highlight-color: transparent; touch-action: manipulation
 
   .story-art { min-height: 15rem; }
   .sun { width: min(54%, 14rem); }
+
+  .gallery-section { --tile: 9.5rem; }
+
+  /* upright: the copy is on top, so the wash comes from the top instead, and
+     the sea shows through underneath where the burger floats */
+  .hero-bg::after {
+    background: linear-gradient(180deg, rgba(253, 243, 227, .9) 0%, rgba(253, 243, 227, .74) 46%, rgba(253, 243, 227, .25) 66%, rgba(253, 243, 227, .05) 100%);
+  }
+  .sun.has-photo { width: min(64%, 15rem); }
+  .sun-badge { box-shadow: 0 0 0 .3rem var(--flame), 0 14px 30px -12px rgba(0, 0, 0, .65); }
+
+  /* thumbs, not cursors: arrows move to the bottom, out of the photo */
+  .lightbox-img { max-height: calc(100dvh - 12rem); }
+  .lightbox-prev, .lightbox-next { top: auto; bottom: max(1.2rem, env(safe-area-inset-bottom)); margin-top: 0; }
+  .lightbox-prev { left: calc(50% - 3.6rem); }
+  .lightbox-next { right: calc(50% - 3.6rem); }
 }
 
 /* Upright tablets: copy to the top, so the loose burger has the bottom half */
 @media (min-width: 721px) and (max-width: 1080px) and (orientation: portrait) {
   .hero { align-content: start; padding-top: 8.5rem; }
+}
+
+/* The inline nav is already full between the phone menu and wide screens;
+   the gallery link waits for the room (it is always in the phone menu) */
+@media (min-width: 721px) and (max-width: 1199px) {
+  .nav-links .nav-extra { display: none; }
+}
+/* the narrow end of each nav size runs a few pixels past the edge; close it up */
+@media (min-width: 721px) and (max-width: 800px) {
+  .site-header .nav { gap: .6rem; }
+  .nav .nav-links { gap: .45rem; letter-spacing: .02em; }
+  .nav .nav-cta { padding-inline: .65rem; }
+}
+@media (min-width: 901px) and (max-width: 1000px) {
+  .nav .nav-links { gap: .9rem; }
 }
 
 /* Small tablets keep the inline nav, tightened so it does not run off the edge */

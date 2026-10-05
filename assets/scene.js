@@ -1087,7 +1087,9 @@ function onResize() {
    pixels from the top left of the canvas. Under the hero that is the room
    below the copy (beside it, on a phone held sideways); once the build section
    pins, it is the .build-stage slot the stylesheet leaves open. */
-const box = { x: 0, y: 0, w: 1, h: 1 };
+const box = { x: 0, y: 0, w: 1, h: 1, fade: 1 };
+/* the fixed header's logo and menu button live in the top strip */
+const HEADER_CLEAR = 84;
 
 function narrowBox(sectionTop) {
   const winH = window.innerHeight;
@@ -1096,11 +1098,10 @@ function narrowBox(sectionTop) {
     x = viewW * 0.56; w = viewW * 0.42;
     y = winH * 0.18; h = winH * 0.8;
   } else {
-    y = Math.min(heroFloor + 8, winH * 0.68);
-    h = winH - y;
+    y = winH * 0.5; h = winH * 0.45;
   }
   const slot = stageEl && stickyEl ? stageEl.getBoundingClientRect() : null;
-  let copyOpacity = '';
+  box.fade = 1;
   if (slot && slot.width > 0 && slot.height > 0) {
     const stickyTop = stickyEl.getBoundingClientRect().top;
     /* where the slot sits once the section has pinned */
@@ -1112,21 +1113,30 @@ function narrowBox(sectionTop) {
       y = lerp(y, rest, k);
       h = lerp(h, slot.height, k);
     } else {
-      /* Upright: the copy stacks above the slot, so the burger has to travel
-         with the slot as it scrolls in. Parked at its pinned spot early, the
-         list would climb through it. It holds under the hero until the slot
-         is nearly home, and the copy stays faded until the burger is clear. */
-      const ride = slot.top - Math.min(stickyTop, 0);
-      const hold = Math.max(y, rest + 160);
-      const k = smooth(hold, rest, ride);
-      x = lerp(x, slot.left, k);
-      w = lerp(w, slot.width, k);
-      h = lerp(h, slot.height, k);
-      y = Math.min(ride, lerp(y, ride, k));
-      copyOpacity = String(1 - smooth(hold, hold + 140, ride));
+      /* Upright: the hero copy sits above and the build copy comes up from
+         below, and the two scroll together. The burger takes the band between
+         them (and under the header), so it travels with the page and neither
+         block of words can ever reach it. As that band scrolls away the burger
+         fades out, then fades back in at its own slot under the build copy. */
+      const top = heroCopy ? heroCopy.getBoundingClientRect().bottom + 12 : 0;
+      const bottom = buildCopy ? buildCopy.getBoundingClientRect().top - 16 : slot.top;
+      const bandTop = Math.max(top, HEADER_CLEAR), bandBottom = Math.min(bottom, winH);
+      const room = bandBottom - bandTop;
+      const enough = winH * 0.24;
+      if (room > enough * 0.6) {
+        y = bandTop; h = room;
+        box.fade = smooth(enough * 0.6, enough, room);
+      } else {
+        x = slot.left;
+        w = slot.width;
+        y = slot.top - Math.min(stickyTop, 0);
+        h = slot.height;
+        /* the band is gone off the top (or never fit, on a short phone) */
+        box.fade = bottom < winH ? 1 - smooth(enough * 0.15, enough * 0.6, room) : 1;
+      }
     }
   }
-  if (buildCopy) buildCopy.style.opacity = copyOpacity;
+  if (buildCopy && buildCopy.style.opacity) buildCopy.style.opacity = '';
   box.x = x; box.y = y; box.w = w; box.h = h;
   return box;
 }
@@ -1186,14 +1196,21 @@ function frame() {
   if (narrow) {
     /* the hat stands well clear of the bun, so the box has to hold that too */
     const b = narrowBox(sectionTop);
+    /* on the canvas itself: the host's opacity eases over .9s for the reveal,
+       which would let the hand-off between the two boxes show */
+    renderer.domElement.style.opacity = b.fade < 1 ? b.fade.toFixed(3) : '';
     const tall = lerp(7.8, 6.1, fit);
     const s = clamp(Math.min((b.w / viewW) * vw * 0.94 / needW, (b.h / viewH) * vh * 0.94 / tall), 0.2, 2.4);
-    root.scale.setScalar(s);
     /* the camera looks 55% of the way toward the burger, hence the 0.45 */
-    root.position.x = ((b.x + b.w / 2) / viewW - 0.5) * vw / 0.45;
-    root.position.y = 0.15 + (0.5 - (b.y + b.h / 2) / viewH) * vh - 0.3 * ease * s + exit * vh;
+    base.s = s;
+    base.x = ((b.x + b.w / 2) / viewW - 0.5) * vw / 0.45;
+    base.y = 0.15 + (0.5 - (b.y + b.h / 2) / viewH) * vh - 0.3 * ease * s + exit * vh;
+    base.raise = RAISE * (1 - fit);
+    base.vw = vw; base.vh = vh; base.exit = exit;
+    placeNarrow();
   } else {
     if (buildCopy && buildCopy.style.opacity) buildCopy.style.opacity = '';
+    if (renderer.domElement.style.opacity) renderer.domElement.style.opacity = '';
     /* the page content is capped at 1320px wide, so on a big window the burger
        eases toward that column instead of growing with the screen */
     const column = lerp(1, Math.min(1, 1320 / viewW), 0.5);
@@ -1201,12 +1218,11 @@ function frame() {
     const availH = vh * 0.67;
     root.scale.setScalar(clamp(Math.min(availW / needW, availH / needH), 0.25, 2.4));
     root.position.y = lerp(-0.45, 0.3, ease) - 0.35 + exit * vh;
+    root.position.y -= RAISE * (1 - fit) * root.scale.y;
   }
-  root.position.y -= RAISE * (1 - fit) * root.scale.y;
 
   if (narrow) {
-    camera.position.set(lookX * 0.5, camY - lookY * 0.35, camZ);
-    camera.lookAt(root.position.x * 0.55, 0.15, 0);
+    aimNarrow();
   } else {
     /* Centre the burger over the hat picker under it. The camera looks 55% of
        the way toward the burger, so screen x is not linear in root.x: nudge
@@ -1344,7 +1360,116 @@ function frame() {
   key.target.position.copy(root.position);
   key.shadow.intensity = lerp(0.4, 0.9, ease);
 
+  /* Small screens: measure where the pieces really landed on screen and pull
+     them back inside their box, so nothing ever runs over the copy, the meter
+     or the hat picker. Two passes: the second checks the first's correction. */
+  if (narrow) {
+    for (let pass = 0; pass < 2; pass++) {
+      keepInBox(dt);
+      placeNarrow();
+      aimNarrow();
+    }
+    key.position.copy(root.position).addScaledVector(KEY_DIR, 30);
+    key.target.position.copy(root.position);
+  }
+
   renderer.render(scene, camera);
+}
+
+/* -------------------------------------------------------------------------
+   Keeping the burger inside its box on small screens
+   ------------------------------------------------------------------------- */
+/* `base` is the layout the frame asks for; `guard` is the measured correction
+   on top of it: a shrink (only ever down from the asked size) and a nudge. */
+const base = { s: 1, x: 0, y: 0, raise: 0, vw: 1, vh: 1, exit: 0 };
+const guard = { k: 1, dx: 0, dy: 0 };
+const partBoxes = [];
+const corner = new THREE.Vector3();
+const RING = 12;
+
+function placeNarrow() {
+  const s = base.s * guard.k;
+  root.scale.setScalar(s);
+  root.position.x = base.x + guard.dx;
+  root.position.y = base.y + guard.dy - base.raise * s;
+}
+
+function aimNarrow() {
+  camera.position.set(lookX * 0.5, camY - lookY * 0.35, camZ);
+  camera.lookAt(root.position.x * 0.55, 0.15, 0);
+}
+
+/* Each piece's box in its own frame, hats included (all of them, at full
+   size, so swapping hats never needs more room than was measured). */
+function measureParts() {
+  const keep = hats.map((h) => h.scale.x);
+  hats.forEach((h) => h.scale.setScalar(1));
+  parts.forEach((part) => {
+    const o = part.obj;
+    const pos = o.position.clone(), rot = o.rotation.clone(), scl = o.scale.clone();
+    o.position.set(0, 0, 0); o.rotation.set(0, 0, 0); o.scale.set(1, 1, 1);
+    o.updateMatrixWorld(true);
+    const inv = new THREE.Matrix4().copy(o.matrixWorld).invert();
+    const bb = new THREE.Box3().setFromObject(o).applyMatrix4(inv);
+    /* a little extra for the cheese melting wider than it was measured */
+    bb.expandByScalar(0.06);
+    partBoxes.push(bb);
+    o.position.copy(pos); o.rotation.copy(rot); o.scale.copy(scl);
+  });
+  hats.forEach((h, i) => h.scale.setScalar(keep[i]));
+}
+
+/* The pieces circle the stack as it turns, so the envelope is taken around
+   the spin axis: a cylinder that holds every piece at any angle. That keeps
+   the framing steady while the burger rotates instead of pumping with it. */
+function keepInBox(dt) {
+  if (!partBoxes.length) measureParts();
+  root.updateMatrixWorld(true);
+  camera.updateMatrixWorld();
+
+  let reach = 0, y0 = Infinity, y1 = -Infinity;
+  for (let i = 0; i < parts.length; i++) {
+    const m = parts[i].obj.matrix, bb = partBoxes[i];
+    for (let c = 0; c < 8; c++) {
+      corner.set(c & 1 ? bb.max.x : bb.min.x, c & 2 ? bb.max.y : bb.min.y, c & 4 ? bb.max.z : bb.min.z).applyMatrix4(m);
+      reach = Math.max(reach, Math.hypot(corner.x, corner.z));
+      y0 = Math.min(y0, corner.y);
+      y1 = Math.max(y1, corner.y);
+    }
+  }
+
+  let left = Infinity, right = -Infinity, top = Infinity, bottom = -Infinity;
+  for (let r = 0; r < RING; r++) {
+    const a = (r / RING) * TAU;
+    for (let e = 0; e < 2; e++) {
+      corner.set(Math.cos(a) * reach, e ? y1 : y0, Math.sin(a) * reach)
+        .applyMatrix4(spin.matrixWorld).project(camera);
+      const px = (corner.x + 1) / 2 * viewW, py = (1 - corner.y) / 2 * viewH;
+      left = Math.min(left, px); right = Math.max(right, px);
+      top = Math.min(top, py); bottom = Math.max(bottom, py);
+    }
+  }
+
+  /* the box rides out of frame with the section, and so does the burger */
+  const pad = 6;
+  const bx = box.x + pad, bw = Math.max(1, box.w - pad * 2);
+  const by = box.y + pad - base.exit * viewH, bh = Math.max(1, box.h - pad * 2);
+  const w = right - left, h = bottom - top;
+  if (!(w > 0 && h > 0)) return;
+
+  /* shrink at once when it does not fit; grow back gently when there is room */
+  const goal = clamp(guard.k * Math.min(bw / w, bh / h), 0.3, 1);
+  guard.k = goal < guard.k ? goal : damp(guard.k, goal, 1.5, dt);
+
+  /* then centre what is there in the box. Height is a straight line, so it
+     takes the full step. Width is not: the camera turns to follow the burger
+     (x shows at 0.45 on screen, less the further out it goes), so a box near
+     the edge may sit past where the burger can reach. Half steps, on a short
+     leash; the shrink above is what keeps the sides clear. */
+  const nudge = ((bx + bw / 2) - (left + right) / 2) / viewW * base.vw / 0.45;
+  guard.dx = clamp(guard.dx + nudge * 0.5, -base.vw * 0.2, base.vw * 0.2);
+  guard.dy = clamp(guard.dy - ((by + bh / 2) - (top + bottom) / 2) / viewH * base.vh, -base.vh, base.vh);
+  if (!Number.isFinite(guard.dx + guard.dy + guard.k)) { guard.k = 1; guard.dx = guard.dy = 0; }
 }
 
 /* -------------------------------------------------------------------------

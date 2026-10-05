@@ -32,21 +32,46 @@
   var links = document.querySelector('.nav-links');
 
   if (toggle && links) {
+    var narrow = window.matchMedia('(max-width: 720px)');
+    var isOpen = function () { return links.classList.contains('is-open'); };
+
+    /* On phones the closed menu is only clipped out of sight, so keep it out
+       of the tab order and the accessibility tree until it is open. */
+    var syncInert = function () { links.inert = narrow.matches && !isOpen(); };
+
     var setMenu = function (open) {
       links.classList.toggle('is-open', open);
       toggle.setAttribute('aria-expanded', String(open));
-      toggle.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
       document.body.classList.toggle('nav-open', open);
       document.body.style.overflow = open ? 'hidden' : '';
+      syncInert();
     };
+    syncInert();
+    if (narrow.addEventListener) narrow.addEventListener('change', function () {
+      if (!narrow.matches && isOpen()) setMenu(false);
+      syncInert();
+    });
+
     toggle.addEventListener('click', function () {
-      setMenu(!links.classList.contains('is-open'));
+      var open = !isOpen();
+      setMenu(open);
+      if (open) links.querySelector('a').focus();
     });
     links.querySelectorAll('a').forEach(function (a) {
       a.addEventListener('click', function () { setMenu(false); });
     });
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') setMenu(false);
+      if (!isOpen()) return;
+      if (e.key === 'Escape') {
+        setMenu(false);
+        toggle.focus();
+      } else if (e.key === 'Tab') {
+        /* Keep Tab inside the open overlay: the button, then its links. */
+        var stops = [toggle].concat(Array.prototype.slice.call(links.querySelectorAll('a')));
+        var first = stops[0], last = stops[stops.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
     });
   }
 
@@ -106,6 +131,7 @@
   /* Scroll-driven state --------------------------------------------------- */
   var build = document.getElementById('build');
   var backdrop = document.querySelector('.backdrop');
+  var buildPhoto = document.querySelector('.build-photo');
   var sticky = document.querySelector('.build-sticky');
   var meter = document.querySelector('.build-meter');
   var meterValue = document.querySelector('.build-meter em');
@@ -154,6 +180,7 @@
          Type and chrome crossfade off the same number so nothing is ever
          cream-on-cream halfway through. */
       if (backdrop) backdrop.style.setProperty('--dive', dive.toFixed(3));
+      if (buildPhoto) buildPhoto.style.setProperty('--dive', dive.toFixed(3));
       if (sticky) sticky.style.setProperty('--mix', dive.toFixed(3));
 
       /* Per-layer highlight */
@@ -197,6 +224,179 @@
 
   if (reduced) { state.p = state.raw = 1; }
   requestAnimationFrame(tick);
+
+  /* Gallery reel ---------------------------------------------------------- */
+  /* Two rows drift in opposite directions and lean further with the scroll,
+     like the ticker. Each row is doubled so the loop has no seam; the copies
+     are hidden from screen readers and the tab order. */
+  var reel = document.querySelector('[data-reel]');
+  var tiles = reel ? Array.prototype.slice.call(reel.querySelectorAll('.reel-tile')) : [];
+  tiles.forEach(function (tile, i) { tile.dataset.index = i; });
+
+  if (reel && !reduced) {
+    var rows = Array.prototype.slice.call(reel.querySelectorAll('.reel-row')).map(function (row) {
+      var originals = Array.prototype.slice.call(row.children);
+      originals.forEach(function (li) {
+        var copy = li.cloneNode(true);
+        copy.setAttribute('aria-hidden', 'true');
+        copy.querySelector('button').tabIndex = -1;
+        row.appendChild(copy);
+      });
+      return { el: row, first: originals[0], twin: row.children[originals.length], dir: parseFloat(row.dataset.speed) || 1, period: 0, drift: 0 };
+    });
+    reel.classList.add('is-live');
+
+    var measure = function () {
+      rows.forEach(function (r) { r.period = r.twin.offsetLeft - r.first.offsetLeft; });
+    };
+    measure();
+    window.addEventListener('resize', measure, { passive: true });
+
+    var reelOn = false;
+    var reelHold = false;
+    var reelSpeed = 1;
+    var reelTime = 0;
+
+    var reelTick = function (now) {
+      if (!reelOn) { reelTime = 0; return; }
+      var dt = reelTime ? Math.min((now - reelTime) / 1000, 0.05) : 0;
+      reelTime = now;
+      /* ease to a stop under the cursor instead of freezing mid-motion */
+      reelSpeed += ((reelHold ? 0 : 1) - reelSpeed) * (1 - Math.exp(-6 * dt));
+      var lean = window.scrollY * 0.3;
+      for (var i = 0; i < rows.length; i++) {
+        var r = rows[i];
+        if (!r.period) continue;
+        r.drift += dt * 24 * reelSpeed;
+        var x = ((r.drift + lean) * r.dir) % r.period;
+        if (x < 0) x += r.period;
+        r.el.style.transform = 'translate3d(' + (-x).toFixed(2) + 'px,0,0)';
+      }
+      requestAnimationFrame(reelTick);
+    };
+
+    /* lazy-loading cannot see a tile that slides in sideways, so once the reel
+       is close, fetch every thumbnail and nothing ever drifts in blank */
+    var warmReel = function () {
+      reel.querySelectorAll('img[loading="lazy"]').forEach(function (img) { img.loading = 'eager'; });
+    };
+
+    if ('IntersectionObserver' in window) {
+      var warmIo = new IntersectionObserver(function (entries) {
+        if (!entries[0].isIntersecting) return;
+        warmReel();
+        warmIo.disconnect();
+      }, { rootMargin: '900px 0px' });
+      warmIo.observe(reel);
+
+      new IntersectionObserver(function (entries) {
+        var on = entries[0].isIntersecting;
+        if (on && !reelOn) { reelOn = true; requestAnimationFrame(reelTick); }
+        reelOn = on;
+      }, { rootMargin: '120px 0px' }).observe(reel);
+    } else {
+      warmReel();
+      reelOn = true;
+      requestAnimationFrame(reelTick);
+    }
+
+    reel.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') reelHold = true; });
+    reel.addEventListener('pointerleave', function () { reelHold = false; });
+    reel.addEventListener('focusin', function () { reelHold = true; });
+    reel.addEventListener('focusout', function () { reelHold = false; });
+  }
+
+  /* Lightbox -------------------------------------------------------------- */
+  var box = document.querySelector('.lightbox');
+  if (reel && box && typeof box.showModal === 'function') {
+    var boxImg = box.querySelector('.lightbox-img');
+    var boxCount = box.querySelector('.lightbox-count');
+    var boxText = box.querySelector('.lightbox-text');
+    var current = 0;
+    var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+
+    var show = function (i) {
+      current = (i + tiles.length) % tiles.length;
+      var tile = tiles[current];
+      var alt = tile.querySelector('img').alt;
+      boxImg.classList.add('is-loading');
+      boxImg.onload = function () { boxImg.classList.remove('is-loading'); };
+      boxImg.src = tile.dataset.full;
+      boxImg.alt = alt;
+      boxText.textContent = alt;
+      boxCount.textContent = pad(current + 1) + ' / ' + pad(tiles.length);
+      /* warm up the neighbours so arrowing through feels instant */
+      [current - 1, current + 1].forEach(function (n) {
+        new Image().src = tiles[(n + tiles.length) % tiles.length].dataset.full;
+      });
+    };
+
+    reel.addEventListener('click', function (e) {
+      var tile = e.target.closest('.reel-tile');
+      if (!tile) return;
+      show(parseInt(tile.dataset.index, 10) || 0);
+      box.showModal();
+      document.documentElement.style.overflow = 'hidden';
+    });
+    box.addEventListener('close', function () {
+      document.documentElement.style.overflow = '';
+      boxImg.removeAttribute('src');
+    });
+    var swiped = false;
+    box.addEventListener('click', function (e) {
+      if (swiped) { swiped = false; return; }
+      var action = e.target.closest('[data-lightbox]');
+      if (action) {
+        var what = action.dataset.lightbox;
+        if (what === 'close') box.close();
+        else show(current + (what === 'next' ? 1 : -1));
+        return;
+      }
+      /* a click on the dark around the photo closes it */
+      if (!e.target.closest('.lightbox-img, .lightbox-caption')) box.close();
+    });
+    box.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight') show(current + 1);
+      if (e.key === 'ArrowLeft') show(current - 1);
+    });
+
+    var swipeX = null;
+    box.addEventListener('pointerdown', function (e) {
+      swiped = false;
+      if (e.pointerType !== 'mouse') swipeX = e.clientX;
+    });
+    box.addEventListener('pointerup', function (e) {
+      if (swipeX === null) return;
+      var dx = e.clientX - swipeX;
+      swipeX = null;
+      if (Math.abs(dx) > 45) { swiped = true; show(current + (dx < 0 ? 1 : -1)); }
+    });
+  }
+
+  /* Section photo drift --------------------------------------------------- */
+  var driftBgs = reduced ? [] : Array.prototype.slice.call(document.querySelectorAll('.sec-bg[data-drift]'));
+  if (driftBgs.length) {
+    var driftQueued = false;
+    var drift = function () {
+      driftQueued = false;
+      var vh = window.innerHeight;
+      driftBgs.forEach(function (bg) {
+        var rect = bg.getBoundingClientRect();
+        if (rect.bottom < -100 || rect.top > vh + 100) return;
+        /* -1 when the section's centre is at the bottom of the screen, +1 at the top */
+        var t = clamp(1 - ((rect.top + rect.height / 2) / vh), -0.5, 1.5) * 2 - 1;
+        var room = rect.height * 0.1; // the image overhangs 12% each side
+        bg.style.setProperty('--drift', (t * room * 0.7).toFixed(1) + 'px');
+      });
+    };
+    window.addEventListener('scroll', function () {
+      if (driftQueued) return;
+      driftQueued = true;
+      requestAnimationFrame(drift);
+    }, { passive: true });
+    window.addEventListener('resize', drift);
+    drift();
+  }
 
   /* Footer year ----------------------------------------------------------- */
   var year = document.getElementById('year');
